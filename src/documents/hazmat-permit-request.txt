@@ -1,0 +1,12 @@
+Hazardous Materials Permit Request
+
+Company: %%company_name%%
+Contact Person: %%contact_person%%
+Material Name: %%material_name%%
+UN Number: %%un_number%%
+Quantity: %%quantity%%
+Storage Location: %%storage_location%%
+Handling Instructions: %%handling_instructions%%
+
+Attachments:
+%%content%%

@@ -1,0 +1,9 @@
+{
+  "type": "workflow",
+  "name": "Port Delay Escalation",
+  "steps": [
+    {"name": "Detect idle containers or blocked entries"},
+    {"name": "Escalate to operations"},
+    {"name": "Trigger re-routing logic"}
+  ]
+}

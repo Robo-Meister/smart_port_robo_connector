@@ -1,0 +1,9 @@
+{
+  "type": "workflow",
+  "name": "Last-Mile Delivery Tracking",
+  "steps": [
+    {"name": "Display driver status from port to warehouse"},
+    {"name": "Handle re-routes"},
+    {"name": "Issue late arrival warnings"}
+  ]
+}

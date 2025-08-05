@@ -1,0 +1,11 @@
+Port Booking Request
+
+Port: %%port_name%%
+Vessel: %%vessel_name%%
+Arrival Date: %%arrival_date%%
+Departure Date: %%departure_date%%
+Cargo Type: %%cargo_type%%
+Requested Berth: %%berth_number%%
+
+Additional Information:
+%%content%%

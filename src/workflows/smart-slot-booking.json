@@ -1,0 +1,10 @@
+{
+  "type": "workflow",
+  "name": "Smart Slot Booking",
+  "steps": [
+    {"name": "Inbound shipment detected"},
+    {"name": "Suggest time slots"},
+    {"name": "Validate documents"},
+    {"name": "Assign driver"}
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "type": "workflow",
+  "name": "Shipment Rebooking",
+  "steps": [
+    {"name": "ETA delayed or dock congested"},
+    {"name": "Show alternative ports or slots"},
+    {"name": "Update ETAs"},
+    {"name": "Notify stakeholders"}
+  ]
+}

@@ -1,0 +1,12 @@
+Customs Clearance Form
+
+Importer: %%importer_name%%
+Exporter: %%exporter_name%%
+Shipment Reference: %%shipment_reference%%
+Port of Entry: %%port_name%%
+Cargo Description: %%cargo_description%%
+Declared Value: %%declared_value%%
+Clearance Deadline: %%clearance_deadline%%
+
+Supporting Documents:
+%%content%%

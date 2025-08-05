@@ -1,0 +1,5 @@
+{
+  "type": "regulation",
+  "name": "Dock Scheduling Rule",
+  "description": "Mandates adherence to assigned time slots to prevent congestion at port docks."
+}

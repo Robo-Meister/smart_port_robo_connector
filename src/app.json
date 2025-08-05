@@ -1,0 +1,13 @@
+{
+  "id": "smart_port_logistics",
+  "name": "Smart Port Logistics",
+  "icon": "🚢",
+  "color": "#1E90FF",
+  "menu": [
+    {"title": "Shipments", "icon": "📦", "path": "/scm/shipments"},
+    {"title": "Smart Booking", "icon": "📅", "path": "/scm/port-booking"},
+    {"title": "Risk Alerts", "icon": "⚠️", "path": "/scm/risk-alerts"},
+    {"title": "Warehouse ETAs", "icon": "🏭", "path": "/scm/warehouse-tracking"},
+    {"title": "Supply Chain Map", "icon": "🗺️", "path": "/scm/supply-map"}
+  ]
+}

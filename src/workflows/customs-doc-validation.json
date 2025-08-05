@@ -1,0 +1,9 @@
+{
+  "type": "workflow",
+  "name": "Customs Document Validation",
+  "steps": [
+    {"name": "Validate uploaded customs and clearance files"},
+    {"name": "Mark missing or invalid"},
+    {"name": "Suggest corrective action"}
+  ]
+}
