@@ -1,0 +1,29 @@
+{
+  "key": "smart_port_logistics",
+  "name": "Smart Port Logistics",
+  "version": "1.0.0",
+  "type": "app",
+  "entry": "app.json",
+  "workflows": [
+    "workflows/smart-slot-booking.json",
+    "workflows/shipment-rebooking.json",
+    "workflows/customs-doc-validation.json",
+    "workflows/port-delay-escalation.json",
+    "workflows/last-mile-delivery-tracking.json"
+  ],
+  "documents": [
+    "documents/port-booking-request-template.txt",
+    "documents/customs-clearance-form.txt",
+    "documents/hazmat-permit-request.txt",
+    "documents/driver-entry-pass.txt"
+  ],
+  "regulations": [
+    "regulations/customs-entry-validation.json",
+    "regulations/hazardous-materials-declaration.json",
+    "regulations/port-entry-permit-check.json",
+    "regulations/dock-scheduling-rule.json"
+  ],
+  "available": true,
+  "description": "California port workflows for imports, booking, tracking, and document checks at Los Angeles and Long Beach.",
+  "tags": ["logistics", "port", "automation"]
+}

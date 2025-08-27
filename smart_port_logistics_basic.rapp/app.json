@@ -1,0 +1,12 @@
+{
+  "defaultRoute": "app_dashboard_index",
+  "requiresInitialSetup": false,
+  "priority": 10,
+  "icon": "fa-anchor",
+  "color": "navy",
+  "description": "Automates port scheduling, customs checks, and last-mile logistics.",
+  "menu": {
+    "Booking": "workflows/smart-slot-booking.json",
+    "Tracking": "workflows/last-mile-delivery-tracking.json"
+  }
+}
