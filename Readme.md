@@ -108,3 +108,10 @@ Perfect for:
 
 > Save hours in port-side scheduling and eliminate hidden logistics delays with intelligent, regulation-aware automation.
 
+
+---
+
+## 📁 Sample Package
+
+A minimal `.rapp` package demonstrating the expected layout is available in `smart_port_logistics_basic.rapp/`. It contains a `meta.json`, an `app.json` and placeholder workflow, document and regulation files that reflect the capabilities listed above.
+
