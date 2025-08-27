@@ -1,0 +1,23 @@
+{
+  "type": "integration",
+  "name": "AI Optimization Engine",
+  "scope": "ai",
+  "support_url": "https://support.example.com/ai",
+  "auth_url": "https://ai.example.com/oauth",
+  "requirements": ["AI_API_KEY"],
+  "front_requirements": [],
+  "ai": true,
+  "front": false,
+  "payment": false,
+  "need_oauth": true,
+  "hooks": [
+    {
+      "name": "Get Slot Recommendation",
+      "description": "Request optimal slot suggestions",
+      "method": "POST",
+      "hook": "https://ai.example.com/api/slot",
+      "content": {"shipment_id": "string"},
+      "action": {"type": "http"}
+    }
+  ]
+}

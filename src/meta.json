@@ -1,5 +1,5 @@
 {
- "id": "smart_port_logistics",
+  "id": "smart_port_logistics",
   "key": "smart_port_logistics",
   "name": "Smart Port Logistics",
   "description": "California port workflows for imports, booking, tracking, and document checks at Los Angeles and Long Beach.",
@@ -25,97 +25,174 @@
     "regulations/dock-scheduling-rule.json"
   ],
   "default_locale": "en-US",
-  "supported_locales": ["en-US", "pl-PL", "zh-CN"],
+  "supported_locales": [
+    "en-US",
+    "pl-PL",
+    "zh-CN"
+  ],
   "default_region": "global",
-  "supported_regions": ["global", "US", "PL", "CN-GD"],
-
+  "supported_regions": [
+    "global",
+    "US",
+    "PL",
+    "CN-GD"
+  ],
   "mission": "detention",
-
   "title": "Smart Slot Booking",
   "outcome": "Detention fees ↓ 40–60% • On-time ↑ 15–25% in 30 days.",
   "kpis": [
-    { "name": "Detention", "delta": "-40–60%" },
-    { "name": "On-time",  "delta": "+15–25%" },
-    { "name": "Dwell time", "delta": "-20–35%" }
+    {
+      "name": "Detention",
+      "delta": "-40–60%"
+    },
+    {
+      "name": "On-time",
+      "delta": "+15–25%"
+    },
+    {
+      "name": "Dwell time",
+      "delta": "-20–35%"
+    }
   ],
-
   "prereqs": {
-    "apis": ["Generic Port Appointments API", "Generic Carrier Appointments API", "ERP Orders API"],
-    "devices": ["Driver mobile app (optional)"],
-    "roles": ["Ops", "IT", "Compliance"]
+    "apis": [
+      "Generic Port Appointments API",
+      "Generic Carrier Appointments API",
+      "ERP Orders API"
+    ],
+    "devices": [
+      "Driver mobile app (optional)"
+    ],
+    "roles": [
+      "Ops",
+      "IT",
+      "Compliance"
+    ]
   },
-  "integrations": ["Generic Port", "Generic Carrier", "Email (SMTP)"],
-
-  "pricing_levers": ["runtime", "assurance"],
-  "badges": ["verified_integration", "security_reviewed", "certified_pack"],
-
+  "integrations": [
+    "integrations/wms.json",
+    "integrations/crm.json",
+    "integrations/finance.json",
+    "integrations/risk-module.json",
+    "integrations/ai-engine.json",
+    "integrations/map-viewer.json"
+  ],
+  "pricing_levers": [
+    "runtime",
+    "assurance"
+  ],
+  "badges": [
+    "verified_integration",
+    "security_reviewed",
+    "certified_pack"
+  ],
   "install_steps": [
     "Install the pack",
     "Connect Port/Carrier/ERP credentials",
     "Run the booking flow"
   ],
-
   "role_blocks": {
     "ops": "Auto-books the earliest compliant slot, validates docs upfront, syncs to the yard list, alerts the driver app, and rebooks on disruption.",
     "finance": "Cuts detention and redelivery charges; pay only when workflows execute (runtime lever). Monthly savings report mapped to invoices.",
     "it": "OAuth to Port and Carrier APIs; idempotent booking with retries; data stays in your org; full audit logs; webhooks for status updates.",
     "compliance": "Pre-checks mandatory docs before booking; QES support for signatures; immutable audit trail with external receipt IDs."
   },
-
   "demo": {
     "video": "/static/demos/smart-slot-booking_global.mp4",
     "length_sec": 85
   },
   "arch_diagram": "/static/diagrams/ssb-dataflow_global.png",
   "last_updated": "2025-08-10",
-
   "regions": {
     "US": {
       "prereqs": {
-        "apis": ["Port of LA Gate API v2", "Carrier X Appointments API", "ERP Orders API"]
+        "apis": [
+          "Port of LA Gate API v2",
+          "Carrier X Appointments API",
+          "ERP Orders API"
+        ]
       },
-      "integrations": ["Port of LA", "Carrier X", "Twilio SMS"],
+      "integrations": [
+        "Port of LA",
+        "Carrier X",
+        "Twilio SMS"
+      ],
       "compliance": {
-        "frameworks": ["CBP, C-TPAT"],
+        "frameworks": [
+          "CBP, C-TPAT"
+        ],
         "disclaimers": "Operational impact may vary by terminal policy."
       },
-      "demo": { "video": "/static/demos/smart-slot-booking_us.mp4" },
+      "demo": {
+        "video": "/static/demos/smart-slot-booking_us.mp4"
+      },
       "arch_diagram": "/static/diagrams/ssb-dataflow_us.png"
     },
     "PL": {
       "prereqs": {
-        "apis": ["Port Gdańsk Slots API", "Przewoźnik X Terminarz API", "ERP Zamówienia API"]
+        "apis": [
+          "Port Gdańsk Slots API",
+          "Przewoźnik X Terminarz API",
+          "ERP Zamówienia API"
+        ]
       },
-      "integrations": ["Port Gdańsk", "Przewoźnik X", "Email (SMTP)"],
+      "integrations": [
+        "Port Gdańsk",
+        "Przewoźnik X",
+        "Email (SMTP)"
+      ],
       "compliance": {
-        "frameworks": ["eIDAS, RODO"],
+        "frameworks": [
+          "eIDAS, RODO"
+        ],
         "qes": true
       },
-      "demo": { "video": "/static/demos/smart-slot-booking_pl.mp4" },
+      "demo": {
+        "video": "/static/demos/smart-slot-booking_pl.mp4"
+      },
       "arch_diagram": "/static/diagrams/ssb-dataflow_pl.png"
     },
     "CN-GD": {
       "prereqs": {
-        "apis": ["Shenzhen/Yantian Port Appointments API", "Carrier X CN API", "ERP Orders API (CN deployment)"]
+        "apis": [
+          "Shenzhen/Yantian Port Appointments API",
+          "Carrier X CN API",
+          "ERP Orders API (CN deployment)"
+        ]
       },
-      "integrations": ["Yantian Port", "WeChat Notifications"],
+      "integrations": [
+        "Yantian Port",
+        "WeChat Notifications"
+      ],
       "compliance": {
-        "frameworks": ["MLPS 2.0"],
+        "frameworks": [
+          "MLPS 2.0"
+        ],
         "data_residency": "Mainland China"
       },
-      "demo": { "video": "/static/demos/smart-slot-booking_cn.mp4" },
+      "demo": {
+        "video": "/static/demos/smart-slot-booking_cn.mp4"
+      },
       "arch_diagram": "/static/diagrams/ssb-dataflow_cn.png"
     }
   },
-
   "i18n": {
     "pl-PL": {
       "title": "Inteligentna Rezerwacja Okien",
       "outcome": "Opłaty za przestój ↓ 40–60% • Punktualność ↑ 15–25% w 30 dni.",
       "kpis": [
-        { "name": "Przestój", "delta": "-40–60%" },
-        { "name": "Punktualność", "delta": "+15–25%" },
-        { "name": "Czas postoju", "delta": "-20–35%" }
+        {
+          "name": "Przestój",
+          "delta": "-40–60%"
+        },
+        {
+          "name": "Punktualność",
+          "delta": "+15–25%"
+        },
+        {
+          "name": "Czas postoju",
+          "delta": "-20–35%"
+        }
       ],
       "install_steps": [
         "Zainstaluj pakiet",
@@ -133,9 +210,18 @@
       "title": "智能预约排仓",
       "outcome": "滞箱费降低 40–60%，准点率提升 15–25%，30 天见效。",
       "kpis": [
-        { "name": "滞箱费", "delta": "-40–60%" },
-        { "name": "准点率", "delta": "+15–25%" },
-        { "name": "停留时间", "delta": "-20–35%" }
+        {
+          "name": "滞箱费",
+          "delta": "-40–60%"
+        },
+        {
+          "name": "准点率",
+          "delta": "+15–25%"
+        },
+        {
+          "name": "停留时间",
+          "delta": "-20–35%"
+        }
       ],
       "install_steps": [
         "安装此包",

@@ -1,4 +1,42 @@
 {
-  "name": "port-delay-escalation",
-  "steps": []
+  "type": "workflow",
+  "code": "port_delay_escalation",
+  "name": "Port Delay Escalation",
+  "description": "Escalates idle containers or blocked entries to operations.",
+  "version": "1.0",
+  "steps": [
+    {
+      "step_id": "detect_idle_or_blocked",
+      "name": "Detect Idle or Blocked",
+      "description": "Identify idle containers or blocked port entries.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["container_status"],
+      "outputs": ["delay_detected"],
+      "next_steps": ["escalate_to_operations"]
+    },
+    {
+      "step_id": "escalate_to_operations",
+      "name": "Escalate to Operations",
+      "description": "Alert operations team about delay.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["delay_detected"],
+      "outputs": ["escalation_notice"],
+      "next_steps": ["trigger_rerouting"]
+    },
+    {
+      "step_id": "trigger_rerouting",
+      "name": "Trigger Re-Routing",
+      "description": "Invoke rerouting logic for affected shipment.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["escalation_notice"],
+      "outputs": ["reroute_request"],
+      "next_steps": []
+    }
+  ]
 }

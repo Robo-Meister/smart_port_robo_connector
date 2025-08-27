@@ -1,0 +1,22 @@
+{
+  "type": "integration",
+  "name": "Map Viewer",
+  "scope": "map",
+  "support_url": "https://support.example.com/map",
+  "auth_url": "https://maps.example.com/oauth",
+  "requirements": ["MAPS_API_KEY"],
+  "front_requirements": [],
+  "ai": false,
+  "front": true,
+  "payment": false,
+  "need_oauth": true,
+  "hooks": [
+    {
+      "name": "Render Route",
+      "description": "Display shipment route on map",
+      "method": "GET",
+      "hook": "https://maps.example.com/api/render",
+      "action": {"type": "http"}
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "type": "integration",
+  "name": "Warehouse Management System",
+  "scope": "warehouse",
+  "support_url": "https://support.example.com/wms",
+  "auth_url": "https://wms.example.com/oauth",
+  "requirements": ["WMS_API_KEY"],
+  "front_requirements": ["WAREHOUSE_ID"],
+  "ai": false,
+  "front": false,
+  "payment": false,
+  "need_oauth": true,
+  "hooks": [
+    {
+      "name": "Update Warehouse ETA",
+      "description": "Sync container ETA to warehouse system",
+      "method": "POST",
+      "hook": "https://wms.example.com/api/eta",
+      "content": {"eta": "string"},
+      "action": {"type": "http"}
+    }
+  ]
+}
