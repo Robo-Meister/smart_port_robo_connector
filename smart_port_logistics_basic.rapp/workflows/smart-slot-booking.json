@@ -1,4 +1,53 @@
 {
-  "name": "smart-slot-booking",
-  "steps": []
+  "type": "workflow",
+  "code": "smart_slot_booking",
+  "name": "Smart Slot Booking",
+  "description": "Suggests optimal container pickup times and finalizes assignments.",
+  "version": "1.0",
+  "steps": [
+    {
+      "step_id": "inbound_shipment_detected",
+      "name": "Inbound Shipment Detected",
+      "description": "Detect inbound container requiring slot booking.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["shipment_id"],
+      "outputs": ["inbound_shipment"],
+      "next_steps": ["suggest_time_slots"]
+    },
+    {
+      "step_id": "suggest_time_slots",
+      "name": "Suggest Time Slots",
+      "description": "AI recommends available port pickup windows.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["inbound_shipment", "port_load"],
+      "outputs": ["recommended_slot"],
+      "next_steps": ["validate_documents"]
+    },
+    {
+      "step_id": "validate_documents",
+      "name": "Validate Documents",
+      "description": "Verify customs and access documents.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["recommended_slot", "documents"],
+      "outputs": ["validated_slot"],
+      "next_steps": ["assign_driver"]
+    },
+    {
+      "step_id": "assign_driver",
+      "name": "Assign Driver",
+      "description": "Allocate driver and confirm booking.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["validated_slot"],
+      "outputs": ["booking_confirmation"],
+      "next_steps": []
+    }
+  ]
 }

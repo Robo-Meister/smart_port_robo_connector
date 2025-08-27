@@ -1,0 +1,23 @@
+{
+  "type": "integration",
+  "name": "Risk Assessment Module",
+  "scope": "risk",
+  "support_url": "https://support.example.com/risk",
+  "auth_url": "https://risk.example.com/oauth",
+  "requirements": ["RISK_API_KEY"],
+  "front_requirements": [],
+  "ai": false,
+  "front": false,
+  "payment": false,
+  "need_oauth": true,
+  "hooks": [
+    {
+      "name": "Evaluate Supplier",
+      "description": "Score supplier or route risk",
+      "method": "POST",
+      "hook": "https://risk.example.com/api/evaluate",
+      "content": {"supplier_id": "string"},
+      "action": {"type": "http"}
+    }
+  ]
+}

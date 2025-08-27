@@ -1,4 +1,42 @@
 {
-  "name": "customs-doc-validation",
-  "steps": []
+  "type": "workflow",
+  "code": "customs_doc_validation",
+  "name": "Customs Document Validation",
+  "description": "Validates customs clearance documents and suggests corrections.",
+  "version": "1.0",
+  "steps": [
+    {
+      "step_id": "validate_uploaded_files",
+      "name": "Validate Uploaded Files",
+      "description": "Check customs and clearance documents.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["uploaded_documents"],
+      "outputs": ["validation_results"],
+      "next_steps": ["mark_missing_or_invalid"]
+    },
+    {
+      "step_id": "mark_missing_or_invalid",
+      "name": "Mark Missing or Invalid",
+      "description": "Flag missing or invalid documents.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["validation_results"],
+      "outputs": ["issues_list"],
+      "next_steps": ["suggest_corrective_action"]
+    },
+    {
+      "step_id": "suggest_corrective_action",
+      "name": "Suggest Corrective Action",
+      "description": "Provide remediation guidance for issues.",
+      "optional": true,
+      "type": "system",
+      "level": 1,
+      "inputs": ["issues_list"],
+      "outputs": ["corrective_actions"],
+      "next_steps": []
+    }
+  ]
 }

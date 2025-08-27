@@ -1,0 +1,23 @@
+{
+  "type": "integration",
+  "name": "CRM System",
+  "scope": "crm",
+  "support_url": "https://support.example.com/crm",
+  "auth_url": "https://crm.example.com/oauth",
+  "requirements": ["CRM_TOKEN"],
+  "front_requirements": ["ACCOUNT_ID"],
+  "ai": false,
+  "front": false,
+  "payment": false,
+  "need_oauth": true,
+  "hooks": [
+    {
+      "name": "Send Client Notification",
+      "description": "Notify client about shipment updates",
+      "method": "POST",
+      "hook": "https://crm.example.com/api/notify",
+      "content": {"message": "string"},
+      "action": {"type": "http"}
+    }
+  ]
+}

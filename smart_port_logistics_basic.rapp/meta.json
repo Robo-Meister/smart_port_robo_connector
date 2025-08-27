@@ -23,6 +23,14 @@
     "regulations/port-entry-permit-check.json",
     "regulations/dock-scheduling-rule.json"
   ],
+  "integrations": [
+    "integrations/wms.json",
+    "integrations/crm.json",
+    "integrations/finance.json",
+    "integrations/risk-module.json",
+    "integrations/ai-engine.json",
+    "integrations/map-viewer.json"
+  ],
   "available": true,
   "description": "California port workflows for imports, booking, tracking, and document checks at Los Angeles and Long Beach.",
   "tags": ["logistics", "port", "automation"]

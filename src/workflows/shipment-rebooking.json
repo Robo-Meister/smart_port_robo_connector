@@ -1,10 +1,53 @@
 {
   "type": "workflow",
+  "code": "shipment_rebooking",
   "name": "Shipment Rebooking",
+  "description": "Handles delays by rebooking shipments to alternate slots.",
+  "version": "1.0",
   "steps": [
-    {"name": "ETA delayed or dock congested"},
-    {"name": "Show alternative ports or slots"},
-    {"name": "Update ETAs"},
-    {"name": "Notify stakeholders"}
+    {
+      "step_id": "detect_delay_or_congestion",
+      "name": "Detect Delay or Congestion",
+      "description": "Identify ETA delays or dock congestion.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["shipment_status", "port_status"],
+      "outputs": ["rebooking_required"],
+      "next_steps": ["suggest_alternatives"]
+    },
+    {
+      "step_id": "suggest_alternatives",
+      "name": "Suggest Alternatives",
+      "description": "Propose alternate ports or time slots.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["rebooking_required"],
+      "outputs": ["alternative_options"],
+      "next_steps": ["update_eta"]
+    },
+    {
+      "step_id": "update_eta",
+      "name": "Update ETA",
+      "description": "Update shipment ETA for selected alternative.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["alternative_options"],
+      "outputs": ["updated_eta"],
+      "next_steps": ["notify_stakeholders"]
+    },
+    {
+      "step_id": "notify_stakeholders",
+      "name": "Notify Stakeholders",
+      "description": "Alert parties about new schedule.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["updated_eta"],
+      "outputs": ["notifications_sent"],
+      "next_steps": []
+    }
   ]
 }

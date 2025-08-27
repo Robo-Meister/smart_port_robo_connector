@@ -1,4 +1,42 @@
 {
-  "name": "last-mile-delivery-tracking",
-  "steps": []
+  "type": "workflow",
+  "code": "last_mile_delivery_tracking",
+  "name": "Last-Mile Delivery Tracking",
+  "description": "Tracks driver status and alerts on re-routes or delays.",
+  "version": "1.0",
+  "steps": [
+    {
+      "step_id": "display_driver_status",
+      "name": "Display Driver Status",
+      "description": "Show driver progress from port to destination.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["driver_id", "gps_feed"],
+      "outputs": ["status_view"],
+      "next_steps": ["handle_reroutes"]
+    },
+    {
+      "step_id": "handle_reroutes",
+      "name": "Handle Re-Routes",
+      "description": "Update route if driver deviates.",
+      "optional": false,
+      "type": "system",
+      "level": 1,
+      "inputs": ["status_view"],
+      "outputs": ["updated_route"],
+      "next_steps": ["issue_late_warnings"]
+    },
+    {
+      "step_id": "issue_late_warnings",
+      "name": "Issue Late Warnings",
+      "description": "Notify stakeholders of late arrivals.",
+      "optional": true,
+      "type": "system",
+      "level": 1,
+      "inputs": ["updated_route"],
+      "outputs": ["late_notifications"],
+      "next_steps": []
+    }
+  ]
 }
