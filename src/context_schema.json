@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "required_paths": [
+    "$.booking.reference_id",
+    "$.booking.requested_window.start",
+    "$.booking.requested_window.end",
+    "$.constraints.mode",
+    "$.documents.required[]"
+  ],
+  "sections": {
+    "booking": {
+      "description": "Core booking intent, identifiers, requested windows, and shipment metadata.",
+      "example_fields": [
+        "reference_id",
+        "requested_window",
+        "container",
+        "facility"
+      ]
+    },
+    "constraints": {
+      "description": "Operational constraints for matching a slot or carrier.",
+      "example_fields": [
+        "mode",
+        "equipment",
+        "temperature",
+        "hazmat"
+      ]
+    },
+    "documents": {
+      "description": "Document requirements, artifacts, and compliance status.",
+      "example_fields": [
+        "required",
+        "provided",
+        "status"
+      ]
+    },
+    "external": {
+      "description": "Provider-specific references and raw payloads.",
+      "example_fields": [
+        "refs",
+        "raw"
+      ]
+    },
+    "audit": {
+      "description": "Audit trail for normalization and actions.",
+      "example_fields": [
+        "normalized_at",
+        "normalized_by"
+      ]
+    },
+    "policy": {
+      "description": "Policy defaults and SLA parameters applied to the booking.",
+      "example_fields": [
+        "hold_ttl_minutes",
+        "eta_tolerance_minutes"
+      ]
+    }
+  }
+}

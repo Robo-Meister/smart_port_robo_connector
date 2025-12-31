@@ -1,58 +1,56 @@
 {
   "type": "workflow",
-  "code": "customs_doc_validation",
   "name": "Customs Document Validation",
-  "description": "Validates customs clearance documents and suggests corrections.",
-  "category": "Customs Compliance",
-  "version": "1.1",
-  "fields": [
-    "uploaded_documents",
-    "validation_results",
-    "issues_list",
-    "corrective_actions"
-  ],
   "steps": [
     {
-      "step_id": "validate_uploaded_files",
-      "name": "Validate Uploaded Files",
-      "description": "Check customs and clearance documents.",
-      "optional": false,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "Compliance Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["uploaded_documents"],
-      "outputs": ["validation_results"],
-      "next_steps": ["mark_missing_or_invalid"]
+      "name": "Validate uploaded customs and clearance files",
+      "action": "ingest"
     },
     {
-      "step_id": "mark_missing_or_invalid",
-      "name": "Mark Missing or Invalid",
-      "description": "Flag missing or invalid documents.",
-      "optional": false,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "Compliance Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["validation_results"],
-      "outputs": ["issues_list"],
-      "next_steps": ["suggest_corrective_action"]
+      "name": "Evaluate regulations ruleset",
+      "action": "rule_evaluation",
+      "ruleset_version": "1.3",
+      "outputs": [
+        "validation/missing-fields.json",
+        "validation/expiry.json",
+        "validation/hazmat-mismatch.json"
+      ]
     },
     {
-      "step_id": "suggest_corrective_action",
-      "name": "Suggest Corrective Action",
-      "description": "Provide remediation guidance for issues.",
-      "optional": true,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "Compliance Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["issues_list"],
-      "outputs": ["corrective_actions"],
-      "next_steps": []
+      "name": "Attach evidence artifacts",
+      "action": "evidence_attachment",
+      "evidence_types": [
+        "customs_declaration",
+        "clearance_certificate",
+        "carrier_manifest",
+        "inspection_photos"
+      ]
+    },
+    {
+      "name": "Handle override request",
+      "action": "override_review",
+      "override_policy": {
+        "authorized_roles": [
+          "Compliance Officer",
+          "Port Authority Supervisor"
+        ],
+        "duration_hours": 24,
+        "reason_required": true,
+        "log_destination": "audit/validation-trace"
+      }
+    },
+    {
+      "name": "Re-validate after corrections",
+      "action": "revalidation",
+      "trigger": "evidence_or_document_updates"
+    },
+    {
+      "name": "Mark missing or invalid",
+      "action": "status_update"
+    },
+    {
+      "name": "Suggest corrective action",
+      "action": "recommendation"
     }
   ]
 }

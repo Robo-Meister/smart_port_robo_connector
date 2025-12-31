@@ -1,59 +1,51 @@
 {
   "type": "workflow",
-  "code": "last_mile_delivery_tracking",
   "name": "Last-Mile Delivery Tracking",
-  "description": "Tracks driver status and alerts on re-routes or delays.",
-  "category": "Delivery Tracking",
-  "version": "1.1",
-  "fields": [
-    "driver_id",
-    "gps_feed",
-    "status_view",
-    "updated_route",
-    "late_notifications"
-  ],
+  "references": {
+    "timeline_events": "../tracking/events.json#/timeline_events",
+    "eta_logic_states": "../tracking/events.json#/eta_logic_states",
+    "delay_reasons": "../tracking/events.json#/delay_reasons"
+  },
   "steps": [
     {
-      "step_id": "display_driver_status",
-      "name": "Display Driver Status",
-      "description": "Show driver progress from port to destination.",
-      "optional": false,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "Logistics Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["driver_id", "gps_feed"],
-      "outputs": ["status_view"],
-      "next_steps": ["handle_reroutes"]
+      "name": "Ingest milestone timeline events",
+      "timeline_events": [
+        "ARRIVED_TERMINAL",
+        "RELEASED_FROM_TERMINAL",
+        "DEPARTED_TERMINAL",
+        "ARRIVED_YARD",
+        "OUT_FOR_DELIVERY",
+        "ARRIVED_DESTINATION",
+        "DELIVERED"
+      ]
     },
     {
-      "step_id": "handle_reroutes",
-      "name": "Handle Re-Routes",
-      "description": "Update route if driver deviates.",
-      "optional": false,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "Logistics Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["status_view"],
-      "outputs": ["updated_route"],
-      "next_steps": ["issue_late_warnings"]
+      "name": "Calculate ETA logic state",
+      "eta_logic_states": [
+        "ETA_CONFIRMED",
+        "ETA_PROJECTED",
+        "ETA_AT_RISK",
+        "ETA_UNKNOWN"
+      ]
     },
     {
-      "step_id": "issue_late_warnings",
-      "name": "Issue Late Warnings",
-      "description": "Notify stakeholders of late arrivals.",
-      "optional": true,
-      "required_manual": true,
-      "retry_on_failure": false,
-      "group": "Logistics Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["updated_route"],
-      "outputs": ["late_notifications"],
-      "next_steps": []
+      "name": "Classify delay reason and trigger alerts",
+      "delay_reasons": [
+        "GATE_CONGESTION",
+        "DOC_HOLD",
+        "EQUIPMENT_SHORTAGE",
+        "WEATHER",
+        "DRIVER_LATE"
+      ]
+    },
+    {
+      "name": "Display driver status from port to warehouse"
+    },
+    {
+      "name": "Handle re-routes"
+    },
+    {
+      "name": "Issue late arrival warnings"
     }
   ]
 }

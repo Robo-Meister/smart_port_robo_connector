@@ -1,0 +1,33 @@
+{
+  "model": "MultiResourceConflict",
+  "description": "Represents conflicts across multiple operational resources (yard, crane, gate, driver).",
+  "requiredFields": [
+    "id",
+    "status",
+    "conflictWindowStartAt",
+    "conflictWindowEndAt",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique conflict identifier (UUID)."},
+    "status": {"type": "string", "description": "Conflict status (open, mitigated, resolved)."},
+    "bookingId": {"type": "string", "description": "Booking impacted by the conflict."},
+    "slotAppointmentId": {"type": "string", "description": "Slot appointment impacted by the conflict."},
+    "yardResourceId": {"type": "string", "description": "Yard resource involved in the conflict."},
+    "craneResourceId": {"type": "string", "description": "Crane resource involved in the conflict."},
+    "gateResourceId": {"type": "string", "description": "Gate resource involved in the conflict."},
+    "driverPartyId": {"type": "string", "description": "Driver or carrier party involved in the conflict."},
+    "conflictWindowStartAt": {"type": "string", "format": "date-time"},
+    "conflictWindowEndAt": {"type": "string", "format": "date-time"},
+    "conflictReason": {"type": "string", "description": "Summary of the resource contention."},
+    "resolutionAction": {"type": "string", "description": "Mitigation or resolution applied."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "booking": {"model": "Booking", "field": "bookingId"},
+    "slotAppointment": {"model": "SlotAppointment", "field": "slotAppointmentId"},
+    "driver": {"model": "Party", "field": "driverPartyId"}
+  }
+}

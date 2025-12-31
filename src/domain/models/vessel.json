@@ -1,0 +1,28 @@
+{
+  "model": "Vessel",
+  "description": "Ocean-going vessel used for port calls and cargo operations.",
+  "requiredFields": [
+    "id",
+    "vesselName",
+    "status",
+    "imoNumber",
+    "operatorPartyId",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique vessel identifier (UUID)."},
+    "vesselName": {"type": "string", "description": "Registered vessel name."},
+    "status": {"type": "string", "description": "Lifecycle status of the vessel call."},
+    "imoNumber": {"type": "string", "description": "IMO number for the vessel."},
+    "callSign": {"type": "string", "description": "Radio call sign for the vessel."},
+    "operatorPartyId": {"type": "string", "description": "Operating carrier or vessel manager."},
+    "estimatedArrivalAt": {"type": "string", "format": "date-time"},
+    "estimatedDepartureAt": {"type": "string", "format": "date-time"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "operator": {"model": "Party", "field": "operatorPartyId"}
+  }
+}

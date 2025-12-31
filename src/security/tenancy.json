@@ -1,0 +1,117 @@
+{
+  "namespace": "security",
+  "description": "Tenant hierarchy, document sharing policies, and shared access auditing.",
+  "models": {
+    "TenantGroup": {
+      "model": "TenantGroup",
+      "description": "Corporate group representing parent and subsidiary tenant relationships.",
+      "requiredFields": [
+        "id",
+        "name",
+        "createdAt",
+        "updatedAt"
+      ],
+      "fields": {
+        "id": {"type": "string", "description": "Unique group identifier (UUID)."},
+        "name": {"type": "string", "description": "Group display name."},
+        "parentGroupId": {"type": "string", "description": "Optional parent group for multi-tier ownership."},
+        "headquartersTenantId": {"type": "string", "description": "Primary tenant representing the parent organization."},
+        "status": {"type": "string", "description": "Lifecycle status for the group."},
+        "createdAt": {"type": "string", "format": "date-time"},
+        "updatedAt": {"type": "string", "format": "date-time"}
+      },
+      "relationships": {
+        "parentGroup": {"model": "TenantGroup", "field": "parentGroupId"},
+        "headquartersTenant": {"model": "Tenant", "field": "headquartersTenantId"}
+      }
+    },
+    "Tenant": {
+      "model": "Tenant",
+      "description": "Operational tenant entity tied to a parent group or parent tenant.",
+      "requiredFields": [
+        "id",
+        "name",
+        "groupId",
+        "createdAt",
+        "updatedAt"
+      ],
+      "fields": {
+        "id": {"type": "string", "description": "Unique tenant identifier (UUID)."},
+        "name": {"type": "string", "description": "Tenant display name."},
+        "groupId": {"type": "string", "description": "Tenant group membership identifier."},
+        "parentTenantId": {"type": "string", "description": "Parent tenant for subsidiary relationships."},
+        "tier": {"type": "string", "description": "Hierarchy tier (parent, subsidiary, affiliate)."},
+        "region": {"type": "string", "description": "Primary operating region."},
+        "status": {"type": "string", "description": "Lifecycle status for the tenant."},
+        "createdAt": {"type": "string", "format": "date-time"},
+        "updatedAt": {"type": "string", "format": "date-time"}
+      },
+      "relationships": {
+        "group": {"model": "TenantGroup", "field": "groupId"},
+        "parentTenant": {"model": "Tenant", "field": "parentTenantId"}
+      }
+    },
+    "DocumentSharingPolicy": {
+      "model": "DocumentSharingPolicy",
+      "description": "Controls which document types can be shared between tenants and for how long.",
+      "requiredFields": [
+        "id",
+        "sourceTenantId",
+        "targetTenantId",
+        "shareableDocumentTypes",
+        "createdAt",
+        "updatedAt"
+      ],
+      "fields": {
+        "id": {"type": "string", "description": "Unique policy identifier (UUID)."},
+        "sourceTenantId": {"type": "string", "description": "Tenant granting access."},
+        "targetTenantId": {"type": "string", "description": "Tenant receiving access."},
+        "shareableDocumentTypes": {"type": "array", "items": {"type": "string"}, "description": "Document classifications approved for sharing."},
+        "shareStartAt": {"type": "string", "format": "date-time", "description": "Policy effective start time."},
+        "shareEndAt": {"type": "string", "format": "date-time", "description": "Policy expiration time."},
+        "revokedAt": {"type": "string", "format": "date-time", "description": "Timestamp when sharing was revoked."},
+        "revokedBy": {"type": "string", "description": "Actor who revoked the policy."},
+        "revocationReason": {"type": "string", "description": "Reason for revocation."},
+        "status": {"type": "string", "description": "Active, suspended, or revoked."},
+        "createdAt": {"type": "string", "format": "date-time"},
+        "updatedAt": {"type": "string", "format": "date-time"}
+      },
+      "relationships": {
+        "sourceTenant": {"model": "Tenant", "field": "sourceTenantId"},
+        "targetTenant": {"model": "Tenant", "field": "targetTenantId"}
+      }
+    },
+    "DocumentShareAccessLog": {
+      "model": "DocumentShareAccessLog",
+      "description": "Audit log for shared document access across tenants.",
+      "requiredFields": [
+        "id",
+        "policyId",
+        "documentId",
+        "documentType",
+        "accessedAt",
+        "accessOutcome"
+      ],
+      "fields": {
+        "id": {"type": "string", "description": "Unique audit event identifier (UUID)."},
+        "policyId": {"type": "string", "description": "Sharing policy applied to the access."},
+        "documentId": {"type": "string", "description": "Shared document identifier."},
+        "documentType": {"type": "string", "description": "Shared document classification."},
+        "accessedByTenantId": {"type": "string", "description": "Tenant that accessed the document."},
+        "accessedByPartyId": {"type": "string", "description": "Party or user that performed the access."},
+        "accessType": {"type": "string", "description": "Access action (view, download, export)."},
+        "accessedAt": {"type": "string", "format": "date-time"},
+        "accessOutcome": {"type": "string", "description": "Result (allowed, denied, revoked)."},
+        "ipAddress": {"type": "string", "description": "Source IP for the access event."},
+        "userAgent": {"type": "string", "description": "User agent or client identifier."},
+        "createdAt": {"type": "string", "format": "date-time"}
+      },
+      "relationships": {
+        "policy": {"model": "DocumentSharingPolicy", "field": "policyId"},
+        "accessedByTenant": {"model": "Tenant", "field": "accessedByTenantId"},
+        "accessedByParty": {"model": "Party", "field": "accessedByPartyId"},
+        "document": {"model": "Document", "field": "documentId"}
+      }
+    }
+  }
+}

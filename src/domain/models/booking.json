@@ -1,0 +1,49 @@
+{
+  "model": "Booking",
+  "description": "Unified reservation of vessel capacity and terminal resources.",
+  "requiredFields": [
+    "id",
+    "bookingNumber",
+    "status",
+    "vesselId",
+    "voyageNumber",
+    "slotAppointmentId",
+    "shipperPartyId",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique booking identifier (UUID)."},
+    "bookingNumber": {"type": "string", "description": "Booking reference number."},
+    "status": {
+      "type": "string",
+      "description": "Booking lifecycle status (requested, held, confirmed, cancelled, no-show, completed, expired)."
+    },
+    "vesselId": {"type": "string", "description": "Assigned vessel identifier."},
+    "voyageNumber": {"type": "string", "description": "Vessel voyage reference."},
+    "slotAppointmentId": {"type": "string", "description": "Slot appointment linked to the booking."},
+    "shipperPartyId": {"type": "string", "description": "Party requesting the booking."},
+    "cargoDescription": {"type": "string", "description": "Summary of cargo."},
+    "containerIds": {"type": "array", "items": "string", "description": "Containers reserved under this booking."},
+    "documents": {"type": "array", "items": "string", "description": "Associated document identifiers."},
+    "requestedAt": {"type": "string", "format": "date-time", "description": "Timestamp when the booking was requested."},
+    "heldUntil": {"type": "string", "format": "date-time", "description": "Hold expiration for provisional capacity."},
+    "confirmedAt": {"type": "string", "format": "date-time", "description": "Timestamp when the booking was confirmed."},
+    "cancelledAt": {"type": "string", "format": "date-time", "description": "Timestamp when the booking was cancelled."},
+    "noShowAt": {"type": "string", "format": "date-time", "description": "Timestamp when the booking was marked as no-show."},
+    "completedAt": {"type": "string", "format": "date-time", "description": "Timestamp when the booking was completed."},
+    "expiredAt": {"type": "string", "format": "date-time", "description": "Timestamp when the booking expired."},
+    "rescheduledFromBookingId": {"type": "string", "description": "Original booking identifier when rescheduled."},
+    "rescheduleCount": {"type": "integer", "description": "Number of reschedules applied to this booking."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "vessel": {"model": "Vessel", "field": "vesselId"},
+    "slotAppointment": {"model": "SlotAppointment", "field": "slotAppointmentId"},
+    "shipper": {"model": "Party", "field": "shipperPartyId"},
+    "containers": {"model": "Container", "field": "containerIds"},
+    "documents": {"model": "Document", "field": "documents"},
+    "rescheduledFrom": {"model": "Booking", "field": "rescheduledFromBookingId"}
+  }
+}

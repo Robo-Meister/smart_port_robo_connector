@@ -1,0 +1,18 @@
+{
+  "rule_id": "DOC.MISSING_FIELDS",
+  "severity": "critical",
+  "status": "failed",
+  "message": "Required customs declaration fields are missing.",
+  "missing_fields": [
+    "importer_of_record",
+    "shipment_value",
+    "country_of_origin"
+  ],
+  "evidence": [
+    {
+      "type": "customs_declaration",
+      "reference": "evidence://docs/customs-declaration-2024-09-15.pdf"
+    }
+  ],
+  "timestamp": "2024-09-15T09:14:22Z"
+}

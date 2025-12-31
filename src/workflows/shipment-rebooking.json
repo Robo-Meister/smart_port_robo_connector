@@ -1,74 +1,184 @@
 {
   "type": "workflow",
-  "code": "shipment_rebooking",
   "name": "Shipment Rebooking",
-  "description": "Handles delays by rebooking shipments to alternate slots.",
-  "category": "Shipment Management",
-  "version": "1.1",
-  "fields": [
-    "shipment_status",
-    "port_status",
-    "rebooking_required",
-    "alternative_options",
-    "updated_eta",
-    "notifications_sent"
-  ],
-  "steps": [
+  "stages": [
     {
-      "step_id": "detect_delay_or_congestion",
-      "name": "Detect Delay or Congestion",
-      "description": "Identify ETA delays or dock congestion.",
-      "optional": false,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "Operations Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["shipment_status", "port_status"],
-      "outputs": ["rebooking_required"],
-      "next_steps": ["suggest_alternatives"]
+      "name": "trigger",
+      "signals": [
+        "ETA delayed or dock congested",
+        "Carrier capacity shortfall",
+        "Regulatory hold resolved"
+      ]
     },
     {
-      "step_id": "suggest_alternatives",
-      "name": "Suggest Alternatives",
-      "description": "Propose alternate ports or time slots.",
-      "optional": false,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "Operations Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["rebooking_required"],
-      "outputs": ["alternative_options"],
-      "next_steps": ["update_eta"]
+      "name": "propose",
+      "actions": [
+        {
+          "action_id": "show_alternative_ports_or_slots",
+          "inputs": {
+            "shipment_id": "{shipment_id}",
+            "constraints": "{constraints}",
+            "preferred_ports": "{preferred_ports}"
+          }
+        },
+        {
+          "action_id": "assemble_candidate_rebooking_plan",
+          "inputs": {
+            "shipment_id": "{shipment_id}",
+            "alternatives": "{alternatives}",
+            "plan_constraints": "{plan_constraints}"
+          }
+        },
+        {
+          "action_id": "generate_what_if_preview",
+          "inputs": {
+            "shipment_id": "{shipment_id}",
+            "rebooking_plan_id": "{rebooking_plan_id}",
+            "cost_model": "{cost_model}"
+          }
+        }
+      ],
+      "what_if_preview_schema": {
+        "eta_impact": {
+          "previous_eta": "ISO-8601 datetime",
+          "proposed_eta": "ISO-8601 datetime",
+          "delta_hours": "number"
+        },
+        "cost_impact": {
+          "currency": "ISO-4217",
+          "base_cost": "number",
+          "proposed_cost": "number",
+          "delta_cost": "number"
+        },
+        "sla_risk": {
+          "risk_level": "low|medium|high",
+          "breach_probability": "number",
+          "notes": "string"
+        }
+      }
     },
     {
-      "step_id": "update_eta",
-      "name": "Update ETA",
-      "description": "Update shipment ETA for selected alternative.",
-      "optional": false,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "Operations Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["alternative_options"],
-      "outputs": ["updated_eta"],
-      "next_steps": ["notify_stakeholders"]
+      "name": "approve",
+      "actions": [
+        {
+          "action_id": "route_for_operations_approval",
+          "inputs": {
+            "rebooking_plan_id": "{rebooking_plan_id}",
+            "approver_group": "{approver_group}",
+            "urgency": "{urgency}"
+          }
+        },
+        {
+          "action_id": "validate_rebooking_guardrails",
+          "inputs": {
+            "rebooking_plan_id": "{rebooking_plan_id}",
+            "guardrail_policy": "{guardrail_policy}",
+            "shipment_value": "{shipment_value}"
+          }
+        },
+        {
+          "action_id": "capture_destination_change_approval",
+          "inputs": {
+            "shipment_id": "{shipment_id}",
+            "destination_change": "{destination_change}",
+            "approver": "{approver}"
+          }
+        }
+      ],
+      "policy_reference": "policies/rebooking.json"
     },
     {
-      "step_id": "notify_stakeholders",
-      "name": "Notify Stakeholders",
-      "description": "Alert parties about new schedule.",
-      "optional": false,
-      "required_manual": true,
-      "retry_on_failure": false,
-      "group": "Support Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["updated_eta"],
-      "outputs": ["notifications_sent"],
-      "next_steps": []
+      "name": "execute",
+      "actions": [
+        {
+          "action_id": "update_etas",
+          "inputs": {
+            "shipment_id": "{shipment_id}",
+            "new_eta": "{new_eta}",
+            "reason": "{reason}"
+          }
+        },
+        {
+          "action_id": "confirm_new_slot",
+          "inputs": {
+            "slot_request_id": "{slot_request_id}",
+            "container_id": "{container_id}",
+            "requested_window": "{requested_window}"
+          }
+        },
+        {
+          "action_id": "notify_stakeholders",
+          "inputs": {
+            "shipment_id": "{shipment_id}",
+            "notification_channels": "{notification_channels}",
+            "message_template": "{message_template}"
+          }
+        }
+      ],
+      "rollback": {
+        "on_failure": "Revert to last confirmed plan",
+        "status": "execution_failed"
+      }
     }
-  ]
+  ],
+  "partial_failure_scenarios": [
+    {
+      "scenario": "Slot confirmed but ETA update fails",
+      "signals": [
+        "slot_confirmed",
+        "eta_update_failed"
+      ],
+      "impact": "Rebooking executed without updated customer ETA",
+      "resolution_path": "eta_update_recovery"
+    },
+    {
+      "scenario": "Approval granted but rebooking execution fails",
+      "signals": [
+        "approval_granted",
+        "execution_failed"
+      ],
+      "impact": "Approved plan not applied",
+      "resolution_path": "execution_recovery"
+    }
+  ],
+  "resolution_paths": {
+    "eta_update_recovery": {
+      "actions": [
+        "Retry ETA update with backoff",
+        "Notify customer success of stale ETA",
+        "Publish manual ETA override"
+      ],
+      "fallback": "Add customer-facing warning banner",
+      "owner": "Customer Success"
+    },
+    "execution_recovery": {
+      "actions": [
+        "Invoke rollback to last confirmed plan",
+        "Re-run slot confirmation",
+        "Escalate to operations for manual rebooking"
+      ],
+      "fallback": "Hold original booking",
+      "owner": "Port Ops"
+    }
+  },
+  "concurrency_locks": [
+    {
+      "resource": "container_move",
+      "scope": "container_id",
+      "lock_key": "container:{container_id}:move",
+      "held_during_stages": [
+        "propose",
+        "approve",
+        "execute"
+      ],
+      "release_conditions": [
+        "rebooking_confirmed",
+        "rollback_completed"
+      ]
+    }
+  ],
+  "policy_references": {
+    "resilience": "policies/resilience.json",
+    "rebooking_guardrails": "policies/rebooking.json"
+  }
 }

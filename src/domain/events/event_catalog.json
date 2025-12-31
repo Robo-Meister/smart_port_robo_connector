@@ -1,0 +1,59 @@
+{
+  "description": "Event types emitted for port domain aggregates.",
+  "eventTypes": [
+    {
+      "eventType": "shipment.created",
+      "entityType": "Shipment",
+      "idempotencyKey": "shipmentId",
+      "payloadFields": ["reference", "bookingId", "originStopId", "destinationStopId"]
+    },
+    {
+      "eventType": "booking.created",
+      "entityType": "Booking",
+      "idempotencyKey": "bookingNumber",
+      "payloadFields": ["vesselId", "voyageNumber", "slotAppointmentId"]
+    },
+    {
+      "eventType": "container.status.updated",
+      "entityType": "Container",
+      "idempotencyKey": "containerId:status:occurredAt",
+      "payloadFields": ["previousStatus", "newStatus"]
+    },
+    {
+      "eventType": "move.created",
+      "entityType": "Move",
+      "idempotencyKey": "moveId",
+      "payloadFields": ["containerId", "fromStopId", "toStopId", "plannedStartAt"]
+    },
+    {
+      "eventType": "stop.updated",
+      "entityType": "Stop",
+      "idempotencyKey": "stopId:plannedArrivalAt",
+      "payloadFields": ["plannedArrivalAt", "plannedDepartureAt", "actualArrivalAt", "actualDepartureAt"]
+    },
+    {
+      "eventType": "document.status.updated",
+      "entityType": "Document",
+      "idempotencyKey": "documentId:status:occurredAt",
+      "payloadFields": ["previousStatus", "newStatus", "documentType"]
+    },
+    {
+      "eventType": "party.role.updated",
+      "entityType": "Party",
+      "idempotencyKey": "partyId:roles:occurredAt",
+      "payloadFields": ["roles"]
+    },
+    {
+      "eventType": "vessel.status.updated",
+      "entityType": "Vessel",
+      "idempotencyKey": "vesselId:status:occurredAt",
+      "payloadFields": ["previousStatus", "newStatus", "eta", "ata"]
+    },
+    {
+      "eventType": "slot_appointment.status.updated",
+      "entityType": "SlotAppointment",
+      "idempotencyKey": "slotAppointmentId:status:occurredAt",
+      "payloadFields": ["previousStatus", "newStatus", "appointmentWindow"]
+    }
+  ]
+}

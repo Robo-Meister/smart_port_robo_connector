@@ -1,75 +1,98 @@
 {
   "type": "workflow",
-  "code": "smart_slot_booking",
   "name": "Smart Slot Booking",
-  "description": "Suggests optimal container pickup times and finalizes assignments.",
-  "category": "Port Scheduling",
-  "version": "1.1",
-  "fields": [
-    "shipment_id",
-    "inbound_shipment",
-    "port_load",
-    "recommended_slot",
-    "documents",
-    "validated_slot",
-    "booking_confirmation"
-  ],
   "steps": [
     {
-      "step_id": "inbound_shipment_detected",
-      "name": "Inbound Shipment Detected",
-      "description": "Detect inbound container requiring slot booking.",
-      "optional": false,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "Operations Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["shipment_id"],
-      "outputs": ["inbound_shipment"],
-      "next_steps": ["suggest_time_slots"]
+      "action_id": "detect_inbound_shipment",
+      "inputs": {
+        "container_id": "{container_id}",
+        "arrival_eta": "{arrival_eta}",
+        "port_code": "{port_code}"
+      }
     },
     {
-      "step_id": "suggest_time_slots",
-      "name": "Suggest Time Slots",
-      "description": "AI recommends available port pickup windows.",
-      "optional": false,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "AI Engine",
-      "type": "system",
-      "level": 1,
-      "inputs": ["inbound_shipment", "port_load"],
-      "outputs": ["recommended_slot"],
-      "next_steps": ["validate_documents"]
+      "action_id": "suggest_time_slots",
+      "inputs": {
+        "container_id": "{container_id}",
+        "arrival_eta": "{arrival_eta}",
+        "preferred_window": "{preferred_window}",
+        "equipment_type": "{equipment_type}"
+      }
     },
     {
-      "step_id": "validate_documents",
-      "name": "Validate Documents",
-      "description": "Verify customs and access documents.",
-      "optional": false,
-      "required_manual": false,
-      "retry_on_failure": true,
-      "group": "Compliance Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["recommended_slot", "documents"],
-      "outputs": ["validated_slot"],
-      "next_steps": ["assign_driver"]
+      "action_id": "validate_documents",
+      "inputs": {
+        "shipment_id": "{shipment_id}",
+        "document_ids": "{document_ids}",
+        "document_type": "{document_type}"
+      }
     },
     {
-      "step_id": "assign_driver",
-      "name": "Assign Driver",
-      "description": "Allocate driver and confirm booking.",
-      "optional": false,
-      "required_manual": true,
-      "retry_on_failure": false,
-      "group": "Operations Team",
-      "type": "system",
-      "level": 1,
-      "inputs": ["validated_slot"],
-      "outputs": ["booking_confirmation"],
-      "next_steps": []
+      "action_id": "assign_driver",
+      "inputs": {
+        "container_id": "{container_id}",
+        "slot_id": "{slot_id}",
+        "carrier_id": "{carrier_id}",
+        "driver_preferences": "{driver_preferences}"
+      }
     }
-  ]
+  ],
+  "partial_failure_scenarios": [
+    {
+      "scenario": "Document validation succeeds but slot booking fails",
+      "signals": [
+        "documents_validated",
+        "slot_booking_api_error"
+      ],
+      "impact": "Shipment cleared but no confirmed slot",
+      "resolution_path": "booking_failure_recovery"
+    },
+    {
+      "scenario": "Slot reserved but driver assignment fails",
+      "signals": [
+        "slot_reserved",
+        "driver_assignment_failed"
+      ],
+      "impact": "Slot held without pickup plan",
+      "resolution_path": "driver_assignment_recovery"
+    }
+  ],
+  "resolution_paths": {
+    "booking_failure_recovery": {
+      "actions": [
+        "Release tentative slot hold",
+        "Retry booking with exponential backoff",
+        "Escalate to operations for manual slot request"
+      ],
+      "fallback": "Route to manual booking queue",
+      "owner": "Port Ops"
+    },
+    "driver_assignment_recovery": {
+      "actions": [
+        "Retry driver assignment",
+        "Offer alternate pickup windows",
+        "Notify carrier dispatch if no driver confirmed"
+      ],
+      "fallback": "Hold slot and mark pickup at risk",
+      "owner": "Dispatch"
+    }
+  },
+  "concurrency_locks": [
+    {
+      "resource": "container_move",
+      "scope": "container_id",
+      "lock_key": "container:{container_id}:move",
+      "held_during_steps": [
+        "suggest_time_slots",
+        "assign_driver"
+      ],
+      "release_conditions": [
+        "slot_confirmed",
+        "workflow_aborted"
+      ]
+    }
+  ],
+  "policy_references": {
+    "resilience": "policies/resilience.json"
+  }
 }

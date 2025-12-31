@@ -1,0 +1,26 @@
+{
+  "type": "regulation",
+  "name": "Rebooking Guardrails",
+  "policy": "rebooking-guardrails",
+  "version": "1.0",
+  "description": "Guardrails for shipment rebooking approvals.",
+  "guardrails": {
+    "max_rebooks_per_day": {
+      "limit": 3,
+      "scope": "per_shipment",
+      "action_on_violation": "require_operations_override"
+    },
+    "hazmat_restrictions": {
+      "requires_hazmat_clearance": true,
+      "blocked_ports": [
+        "non_hazmat_certified"
+      ],
+      "action_on_violation": "block_and_escalate"
+    },
+    "destination_change_approval": {
+      "required": true,
+      "approver_role": "operations_manager",
+      "notes": "Destination changes require explicit approval before execution."
+    }
+  }
+}

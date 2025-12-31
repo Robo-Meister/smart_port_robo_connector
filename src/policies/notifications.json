@@ -1,0 +1,145 @@
+{
+  "type": "regulation",
+  "name": "Notification Policy",
+  "policy": "notifications",
+  "version": "1.0",
+  "description": "Routing, severity, and escalation rules for port logistics alerts.",
+  "channels": {
+    "email": {
+      "providers": ["ses", "sendgrid"],
+      "supports_rich_content": true
+    },
+    "sms": {
+      "providers": ["twilio"],
+      "max_length": 160
+    },
+    "push": {
+      "providers": ["firebase"],
+      "supports_action_buttons": true
+    },
+    "webhook": {
+      "providers": ["generic"],
+      "retries": 3
+    },
+    "in_app": {
+      "supports_action_buttons": true
+    }
+  },
+  "severity_levels": {
+    "info": {
+      "sla_minutes": 60,
+      "default_channels": ["in_app"]
+    },
+    "warning": {
+      "sla_minutes": 30,
+      "default_channels": ["in_app", "email"]
+    },
+    "critical": {
+      "sla_minutes": 10,
+      "default_channels": ["sms", "push", "in_app"]
+    }
+  },
+  "time_of_day_windows": {
+    "business_hours": {
+      "timezone": "America/Los_Angeles",
+      "days": ["mon", "tue", "wed", "thu", "fri"],
+      "start": "06:00",
+      "end": "18:00"
+    },
+    "after_hours": {
+      "timezone": "America/Los_Angeles",
+      "days": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+      "start": "18:00",
+      "end": "06:00"
+    }
+  },
+  "routing_rules": [
+    {
+      "name": "Critical port delays",
+      "match": {
+        "event_type": "port_delay",
+        "severity": "critical"
+      },
+      "route_to": ["dispatcher", "operations"],
+      "channels": ["sms", "push", "in_app"],
+      "required_ack_minutes": 10,
+      "time_of_day": "after_hours"
+    },
+    {
+      "name": "Compliance holds",
+      "match": {
+        "event_type": "compliance_hold",
+        "severity": "warning"
+      },
+      "route_to": ["compliance"],
+      "channels": ["email", "in_app"],
+      "required_ack_minutes": 30,
+      "time_of_day": "business_hours"
+    },
+    {
+      "name": "Customer-impacting delays",
+      "match": {
+        "event_type": "port_delay",
+        "tags": ["customer_impact"]
+      },
+      "route_to": ["customer_success"],
+      "channels": ["email", "in_app"],
+      "required_ack_minutes": 45,
+      "time_of_day": "business_hours"
+    }
+  ],
+  "deduplication": {
+    "default_window_minutes": 30,
+    "rules": [
+      {
+        "name": "Port delay repeat suppression",
+        "match": {
+          "event_type": "port_delay"
+        },
+        "window_minutes": 30,
+        "strategy": "suppress_repeats"
+      }
+    ],
+    "suppression": [
+      {
+        "name": "Maintenance blackout",
+        "match": {
+          "tag": "maintenance"
+        },
+        "suppress": true,
+        "notes": "Suppress alerts during approved maintenance windows."
+      }
+    ]
+  },
+  "escalation_ladders": {
+    "port_delay": {
+      "stop_conditions": ["acknowledged", "resolved"],
+      "levels": [
+        {
+          "level": 1,
+          "role": "dispatcher",
+          "after_minutes": 0,
+          "channels": ["in_app", "sms"]
+        },
+        {
+          "level": 2,
+          "role": "operations",
+          "after_minutes": 15,
+          "channels": ["push", "email"]
+        },
+        {
+          "level": 3,
+          "role": "compliance",
+          "after_minutes": 30,
+          "channels": ["email"]
+        },
+        {
+          "level": 4,
+          "role": "customer_success",
+          "after_minutes": 45,
+          "channels": ["email", "in_app"]
+        }
+      ]
+    }
+  }
+}

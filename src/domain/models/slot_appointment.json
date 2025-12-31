@@ -1,0 +1,39 @@
+{
+  "model": "SlotAppointment",
+  "description": "Reserved terminal slot appointment for gate or yard activity.",
+  "requiredFields": [
+    "id",
+    "appointmentNumber",
+    "status",
+    "bookingId",
+    "scheduledStartAt",
+    "scheduledEndAt",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique slot appointment identifier (UUID)."},
+    "appointmentNumber": {"type": "string", "description": "Appointment reference number."},
+    "status": {
+      "type": "string",
+      "description": "Slot appointment status (suggested, requested, confirmed, checked-in, completed, no-show, cancelled)."
+    },
+    "bookingId": {"type": "string", "description": "Booking that requested the slot."},
+    "carrierPartyId": {"type": "string", "description": "Carrier or trucking party assigned to the appointment."},
+    "scheduledStartAt": {"type": "string", "format": "date-time"},
+    "scheduledEndAt": {"type": "string", "format": "date-time"},
+    "checkInAt": {"type": "string", "format": "date-time"},
+    "completedAt": {"type": "string", "format": "date-time"},
+    "cancelledAt": {"type": "string", "format": "date-time", "description": "Timestamp when the appointment was cancelled."},
+    "noShowAt": {"type": "string", "format": "date-time", "description": "Timestamp when the appointment was marked as no-show."},
+    "rescheduledFromAppointmentId": {"type": "string", "description": "Original appointment identifier when rescheduled."},
+    "rescheduledAt": {"type": "string", "format": "date-time", "description": "Timestamp when the appointment was rescheduled."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "booking": {"model": "Booking", "field": "bookingId"},
+    "carrier": {"model": "Party", "field": "carrierPartyId"},
+    "rescheduledFrom": {"model": "SlotAppointment", "field": "rescheduledFromAppointmentId"}
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "vessel": {
+    "states": ["scheduled", "delayed", "arrived", "berthed", "discharged"],
+    "transitions": {
+      "scheduled": ["delayed", "arrived"],
+      "delayed": ["arrived"],
+      "arrived": ["berthed"],
+      "berthed": ["discharged"],
+      "discharged": []
+    }
+  },
+  "container": {
+    "states": ["pre-arrival", "available", "gated-out", "in-transit", "delivered", "closed"],
+    "transitions": {
+      "pre-arrival": ["available"],
+      "available": ["gated-out"],
+      "gated-out": ["in-transit"],
+      "in-transit": ["delivered"],
+      "delivered": ["closed"],
+      "closed": []
+    }
+  },
+  "booking": {
+    "states": ["requested", "held", "confirmed", "cancelled", "no-show", "completed", "expired"],
+    "transitions": {
+      "requested": ["held", "confirmed", "cancelled", "expired"],
+      "held": ["confirmed", "cancelled", "expired"],
+      "confirmed": ["completed", "cancelled", "no-show", "held"],
+      "cancelled": [],
+      "no-show": [],
+      "completed": [],
+      "expired": []
+    }
+  },
+  "slotAppointment": {
+    "states": ["suggested", "requested", "confirmed", "checked-in", "completed", "no-show", "cancelled"],
+    "transitions": {
+      "suggested": ["requested", "cancelled"],
+      "requested": ["confirmed", "cancelled", "suggested"],
+      "confirmed": ["checked-in", "cancelled", "no-show", "requested"],
+      "checked-in": ["completed", "no-show"],
+      "completed": [],
+      "no-show": [],
+      "cancelled": []
+    }
+  },
+  "document": {
+    "states": ["required", "submitted", "validated", "rejected", "overridden", "expired"],
+    "transitions": {
+      "required": ["submitted", "expired"],
+      "submitted": ["validated", "rejected", "expired"],
+      "validated": ["overridden", "expired"],
+      "rejected": ["submitted", "expired"],
+      "overridden": ["expired"],
+      "expired": []
+    }
+  }
+}

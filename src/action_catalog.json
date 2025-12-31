@@ -1,0 +1,349 @@
+{
+  "actions": [
+    {
+      "action_id": "detect_inbound_shipment",
+      "input_contract": {
+        "required": ["container_id", "arrival_eta"],
+        "properties": {
+          "container_id": "string",
+          "arrival_eta": "ISO-8601 datetime",
+          "port_code": "UN/LOCODE"
+        }
+      },
+      "output_contract": {
+        "signals": ["inbound_shipment_detected"],
+        "properties": {
+          "shipment_id": "string"
+        }
+      },
+      "side_effects": ["ingests inbound shipment event"],
+      "idempotency_key": "container:{container_id}:inbound-detect",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "port_ops",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "suggest_time_slots",
+      "input_contract": {
+        "required": ["container_id", "arrival_eta", "preferred_window"],
+        "properties": {
+          "container_id": "string",
+          "arrival_eta": "ISO-8601 datetime",
+          "preferred_window": "string",
+          "equipment_type": "string"
+        }
+      },
+      "output_contract": {
+        "signals": ["slot_suggestions_ready"],
+        "properties": {
+          "slot_candidates": "array"
+        }
+      },
+      "side_effects": ["queries slot inventory"],
+      "idempotency_key": "container:{container_id}:slot-suggest",
+      "sla": {
+        "response_time_minutes": 10
+      },
+      "security": {
+        "access": "scheduling",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "validate_documents",
+      "input_contract": {
+        "required": ["shipment_id", "document_ids"],
+        "properties": {
+          "shipment_id": "string",
+          "document_ids": "array",
+          "document_type": "string"
+        }
+      },
+      "output_contract": {
+        "signals": ["documents_validated"],
+        "properties": {
+          "validation_status": "string",
+          "issues": "array"
+        }
+      },
+      "side_effects": ["reads compliance documents"],
+      "idempotency_key": "shipment:{shipment_id}:doc-validate",
+      "sla": {
+        "response_time_minutes": 15
+      },
+      "security": {
+        "access": "compliance",
+        "data_classification": "restricted"
+      }
+    },
+    {
+      "action_id": "assign_driver",
+      "input_contract": {
+        "required": ["container_id", "slot_id", "carrier_id"],
+        "properties": {
+          "container_id": "string",
+          "slot_id": "string",
+          "carrier_id": "string",
+          "driver_preferences": "array"
+        }
+      },
+      "output_contract": {
+        "signals": ["driver_assigned"],
+        "properties": {
+          "driver_id": "string",
+          "assignment_status": "string"
+        }
+      },
+      "side_effects": ["reserves driver capacity"],
+      "idempotency_key": "container:{container_id}:driver-assign",
+      "sla": {
+        "response_time_minutes": 20
+      },
+      "security": {
+        "access": "dispatch",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "show_alternative_ports_or_slots",
+      "input_contract": {
+        "required": ["shipment_id", "constraints"],
+        "properties": {
+          "shipment_id": "string",
+          "constraints": "object",
+          "preferred_ports": "array"
+        }
+      },
+      "output_contract": {
+        "signals": ["alternatives_presented"],
+        "properties": {
+          "alternatives": "array"
+        }
+      },
+      "side_effects": ["reads port capacity data"],
+      "idempotency_key": "shipment:{shipment_id}:alternatives",
+      "sla": {
+        "response_time_minutes": 10
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "assemble_candidate_rebooking_plan",
+      "input_contract": {
+        "required": ["shipment_id", "alternatives"],
+        "properties": {
+          "shipment_id": "string",
+          "alternatives": "array",
+          "plan_constraints": "object"
+        }
+      },
+      "output_contract": {
+        "signals": ["candidate_plan_ready"],
+        "properties": {
+          "rebooking_plan_id": "string"
+        }
+      },
+      "side_effects": ["creates draft rebooking plan"],
+      "idempotency_key": "shipment:{shipment_id}:plan-build",
+      "sla": {
+        "response_time_minutes": 20
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "generate_what_if_preview",
+      "input_contract": {
+        "required": ["shipment_id", "rebooking_plan_id"],
+        "properties": {
+          "shipment_id": "string",
+          "rebooking_plan_id": "string",
+          "cost_model": "string"
+        }
+      },
+      "output_contract": {
+        "signals": ["what_if_preview_ready"],
+        "properties": {
+          "eta_impact": "object",
+          "cost_impact": "object",
+          "sla_risk": "object"
+        }
+      },
+      "side_effects": ["reads pricing and SLA data"],
+      "idempotency_key": "shipment:{shipment_id}:what-if",
+      "sla": {
+        "response_time_minutes": 15
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "sensitive"
+      }
+    },
+    {
+      "action_id": "route_for_operations_approval",
+      "input_contract": {
+        "required": ["rebooking_plan_id", "approver_group"],
+        "properties": {
+          "rebooking_plan_id": "string",
+          "approver_group": "string",
+          "urgency": "string"
+        }
+      },
+      "output_contract": {
+        "signals": ["approval_routed"],
+        "properties": {
+          "approval_request_id": "string"
+        }
+      },
+      "side_effects": ["creates approval request"],
+      "idempotency_key": "plan:{rebooking_plan_id}:approval-route",
+      "sla": {
+        "response_time_minutes": 30
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "validate_rebooking_guardrails",
+      "input_contract": {
+        "required": ["rebooking_plan_id", "guardrail_policy"],
+        "properties": {
+          "rebooking_plan_id": "string",
+          "guardrail_policy": "string",
+          "shipment_value": "number"
+        }
+      },
+      "output_contract": {
+        "signals": ["guardrails_validated"],
+        "properties": {
+          "validation_status": "string",
+          "violations": "array"
+        }
+      },
+      "side_effects": ["evaluates policy rules"],
+      "idempotency_key": "plan:{rebooking_plan_id}:guardrails",
+      "sla": {
+        "response_time_minutes": 10
+      },
+      "security": {
+        "access": "compliance",
+        "data_classification": "sensitive"
+      }
+    },
+    {
+      "action_id": "capture_destination_change_approval",
+      "input_contract": {
+        "required": ["shipment_id", "destination_change"],
+        "properties": {
+          "shipment_id": "string",
+          "destination_change": "object",
+          "approver": "string"
+        }
+      },
+      "output_contract": {
+        "signals": ["destination_change_approved"],
+        "properties": {
+          "approval_id": "string"
+        }
+      },
+      "side_effects": ["records customer approval"],
+      "idempotency_key": "shipment:{shipment_id}:destination-approval",
+      "sla": {
+        "response_time_minutes": 120
+      },
+      "security": {
+        "access": "customer_success",
+        "data_classification": "restricted"
+      }
+    },
+    {
+      "action_id": "update_etas",
+      "input_contract": {
+        "required": ["shipment_id", "new_eta"],
+        "properties": {
+          "shipment_id": "string",
+          "new_eta": "ISO-8601 datetime",
+          "reason": "string"
+        }
+      },
+      "output_contract": {
+        "signals": ["eta_updated"],
+        "properties": {
+          "previous_eta": "ISO-8601 datetime"
+        }
+      },
+      "side_effects": ["updates customer ETA data"],
+      "idempotency_key": "shipment:{shipment_id}:eta-update",
+      "sla": {
+        "response_time_minutes": 10
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "sensitive"
+      }
+    },
+    {
+      "action_id": "confirm_new_slot",
+      "input_contract": {
+        "required": ["slot_request_id", "container_id"],
+        "properties": {
+          "slot_request_id": "string",
+          "container_id": "string",
+          "requested_window": "string"
+        }
+      },
+      "output_contract": {
+        "signals": ["slot_confirmed"],
+        "properties": {
+          "slot_id": "string"
+        }
+      },
+      "side_effects": ["books slot with terminal"],
+      "idempotency_key": "container:{container_id}:slot-confirm",
+      "sla": {
+        "response_time_minutes": 15
+      },
+      "security": {
+        "access": "scheduling",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "notify_stakeholders",
+      "input_contract": {
+        "required": ["shipment_id", "notification_channels"],
+        "properties": {
+          "shipment_id": "string",
+          "notification_channels": "array",
+          "message_template": "string"
+        }
+      },
+      "output_contract": {
+        "signals": ["stakeholders_notified"],
+        "properties": {
+          "notification_status": "string"
+        }
+      },
+      "side_effects": ["sends notifications"],
+      "idempotency_key": "shipment:{shipment_id}:notify",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "communications",
+        "data_classification": "operational"
+      }
+    }
+  ]
+}

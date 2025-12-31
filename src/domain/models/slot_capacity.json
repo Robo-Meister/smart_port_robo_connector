@@ -1,0 +1,31 @@
+{
+  "model": "SlotCapacity",
+  "description": "Capacity allocation and availability for a time-based slot.",
+  "requiredFields": [
+    "id",
+    "resourceType",
+    "slotStartAt",
+    "slotEndAt",
+    "totalCapacity",
+    "availableCapacity",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique slot capacity identifier (UUID)."},
+    "resourceType": {
+      "type": "string",
+      "description": "Resource type (yard, crane, gate, driver)."
+    },
+    "resourceId": {"type": "string", "description": "Specific resource identifier, if capacity is scoped to a single asset."},
+    "slotStartAt": {"type": "string", "format": "date-time"},
+    "slotEndAt": {"type": "string", "format": "date-time"},
+    "totalCapacity": {"type": "integer", "description": "Total capacity units for the slot."},
+    "reservedCapacity": {"type": "integer", "description": "Capacity already reserved for confirmed/held bookings."},
+    "availableCapacity": {"type": "integer", "description": "Remaining capacity available for new bookings."},
+    "capacityUnit": {"type": "string", "description": "Unit of measure for the capacity (TEU, moves, appointments)."},
+    "notes": {"type": "string", "description": "Operational notes or exceptions for the slot."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  }
+}

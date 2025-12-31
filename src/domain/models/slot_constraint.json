@@ -1,0 +1,33 @@
+{
+  "model": "SlotConstraint",
+  "description": "Operational constraints applied to slot allocations.",
+  "requiredFields": [
+    "id",
+    "constraintType",
+    "resourceType",
+    "effectiveStartAt",
+    "effectiveEndAt",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique slot constraint identifier (UUID)."},
+    "constraintType": {
+      "type": "string",
+      "description": "Constraint type (blackout, quota, equipment, safety)."
+    },
+    "resourceType": {
+      "type": "string",
+      "description": "Resource type affected (yard, crane, gate, driver)."
+    },
+    "resourceId": {"type": "string", "description": "Specific resource identifier if the constraint targets a single asset."},
+    "effectiveStartAt": {"type": "string", "format": "date-time"},
+    "effectiveEndAt": {"type": "string", "format": "date-time"},
+    "maxCapacity": {"type": "integer", "description": "Maximum allowable capacity during the constraint window."},
+    "minCapacity": {"type": "integer", "description": "Minimum guaranteed capacity during the constraint window."},
+    "ruleExpression": {"type": "string", "description": "Human-readable or machine-parsable rule expression."},
+    "reason": {"type": "string", "description": "Operational reason for the constraint."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  }
+}

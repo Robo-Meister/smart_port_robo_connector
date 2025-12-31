@@ -1,0 +1,97 @@
+{
+  "type": "tracking_events",
+  "name": "Milestone Timeline Events",
+  "timeline_events": [
+    {
+      "code": "ARRIVED_TERMINAL",
+      "label": "Arrived terminal",
+      "description": "Container received at the marine terminal and awaiting intake processing.",
+      "stage": "terminal"
+    },
+    {
+      "code": "RELEASED_FROM_TERMINAL",
+      "label": "Released from terminal",
+      "description": "Terminal release issued; container is available for pickup.",
+      "stage": "terminal"
+    },
+    {
+      "code": "DEPARTED_TERMINAL",
+      "label": "Departed terminal",
+      "description": "Container exited the terminal gate and is en route to the yard or destination.",
+      "stage": "drayage"
+    },
+    {
+      "code": "ARRIVED_YARD",
+      "label": "Arrived yard",
+      "description": "Container checked into the yard for staging, consolidation, or inspection.",
+      "stage": "yard"
+    },
+    {
+      "code": "OUT_FOR_DELIVERY",
+      "label": "Out for delivery",
+      "description": "Driver has departed the yard for final delivery.",
+      "stage": "last_mile"
+    },
+    {
+      "code": "ARRIVED_DESTINATION",
+      "label": "Arrived destination",
+      "description": "Container arrived at the delivery destination or consignee facility.",
+      "stage": "last_mile"
+    },
+    {
+      "code": "DELIVERED",
+      "label": "Delivered",
+      "description": "Delivery confirmed and proof of delivery captured.",
+      "stage": "complete"
+    }
+  ],
+  "eta_logic_states": [
+    {
+      "state": "ETA_CONFIRMED",
+      "label": "ETA confirmed",
+      "definition": "ETA derived from live telematics and confirmed driver availability."
+    },
+    {
+      "state": "ETA_PROJECTED",
+      "label": "ETA projected",
+      "definition": "ETA calculated from historical transit time and current routing assumptions."
+    },
+    {
+      "state": "ETA_AT_RISK",
+      "label": "ETA at risk",
+      "definition": "ETA exists but is likely to slip due to active delays or disruptions."
+    },
+    {
+      "state": "ETA_UNKNOWN",
+      "label": "ETA unknown",
+      "definition": "ETA cannot be computed due to missing telemetry, status, or route data."
+    }
+  ],
+  "delay_reasons": [
+    {
+      "code": "GATE_CONGESTION",
+      "label": "Gate congestion",
+      "description": "Terminal gate queues or access bottlenecks are slowing departures."
+    },
+    {
+      "code": "DOC_HOLD",
+      "label": "Documentation hold",
+      "description": "Missing or invalid documents are preventing release or movement."
+    },
+    {
+      "code": "EQUIPMENT_SHORTAGE",
+      "label": "Equipment shortage",
+      "description": "Chassis or yard equipment availability is limiting moves."
+    },
+    {
+      "code": "WEATHER",
+      "label": "Weather",
+      "description": "Severe weather conditions are limiting terminal or road operations."
+    },
+    {
+      "code": "DRIVER_LATE",
+      "label": "Driver late",
+      "description": "Driver checked in late or missed an appointment window."
+    }
+  ]
+}

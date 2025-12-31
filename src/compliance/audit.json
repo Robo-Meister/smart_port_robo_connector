@@ -1,0 +1,151 @@
+{
+  "namespace": "compliance",
+  "description": "Audit logging schema, retention policies, and sensitive document access logging.",
+  "models": {
+    "AuditLogEntry": {
+      "model": "AuditLogEntry",
+      "description": "Immutable audit log entry capturing who, what, when, why, and applied rule context.",
+      "requiredFields": [
+        "id",
+        "eventType",
+        "actor",
+        "action",
+        "target",
+        "occurredAt",
+        "reason"
+      ],
+      "fields": {
+        "id": {"type": "string", "description": "Unique audit event identifier (UUID)."},
+        "eventType": {"type": "string", "description": "Event classification (policy_decision, document_access, override)."},
+        "actor": {
+          "type": "object",
+          "description": "Who performed the action.",
+          "fields": {
+            "actorId": {"type": "string", "description": "User or service identifier."},
+            "actorType": {"type": "string", "description": "Role or system type (user, service, workflow)."},
+            "tenantId": {"type": "string", "description": "Tenant owning the action."},
+            "ipAddress": {"type": "string", "description": "Source IP address."},
+            "userAgent": {"type": "string", "description": "Client identifier or user agent."}
+          }
+        },
+        "action": {"type": "string", "description": "What happened (approve, deny, export, delete, view)."},
+        "target": {
+          "type": "object",
+          "description": "What the action applied to.",
+          "fields": {
+            "resourceType": {"type": "string", "description": "Resource classification (document, shipment, policy)."},
+            "resourceId": {"type": "string", "description": "Target resource identifier."},
+            "resourceLabel": {"type": "string", "description": "Human-readable label."},
+            "sensitivity": {"type": "string", "description": "Data sensitivity (public, internal, sensitive, regulated)."}
+          }
+        },
+        "occurredAt": {"type": "string", "format": "date-time", "description": "When the event occurred."},
+        "reason": {"type": "string", "description": "Why the action occurred (business justification, ticket reference)."},
+        "outcome": {"type": "string", "description": "Result (allowed, denied, escalated)."},
+        "override": {
+          "type": "object",
+          "description": "Override details when policy exceptions are granted.",
+          "fields": {
+            "overrideApplied": {"type": "boolean", "description": "True when an override was used."},
+            "overrideReason": {"type": "string", "description": "Rationale for the override."},
+            "overrideApprovedBy": {"type": "string", "description": "Approver identifier."},
+            "overrideApprovedAt": {"type": "string", "format": "date-time"},
+            "overridePolicyId": {"type": "string", "description": "Policy or control that was overridden."}
+          }
+        },
+        "ruleVersions": {
+          "type": "array",
+          "description": "Rules evaluated for this event with the versions enforced.",
+          "items": {
+            "type": "object",
+            "fields": {
+              "ruleId": {"type": "string", "description": "Rule identifier."},
+              "ruleName": {"type": "string", "description": "Rule name."},
+              "ruleVersion": {"type": "string", "description": "Rule version used in evaluation."},
+              "ruleOutcome": {"type": "string", "description": "Rule evaluation result."}
+            }
+          }
+        },
+        "correlationId": {"type": "string", "description": "Trace identifier for related events."},
+        "metadata": {"type": "object", "description": "Additional structured metadata for the event."}
+      }
+    },
+    "SensitiveDocumentAccessLog": {
+      "model": "SensitiveDocumentAccessLog",
+      "description": "Access log for sensitive and regulated documents.",
+      "requiredFields": [
+        "id",
+        "documentId",
+        "documentType",
+        "accessedBy",
+        "accessAction",
+        "accessedAt",
+        "accessOutcome"
+      ],
+      "fields": {
+        "id": {"type": "string", "description": "Unique access log identifier (UUID)."},
+        "documentId": {"type": "string", "description": "Document identifier."},
+        "documentType": {"type": "string", "description": "Document classification."},
+        "accessedBy": {"type": "string", "description": "User or service performing the access."},
+        "accessAction": {"type": "string", "description": "Access action (view, download, export, share)."},
+        "accessedAt": {"type": "string", "format": "date-time"},
+        "accessOutcome": {"type": "string", "description": "Outcome (allowed, denied, masked)."},
+        "accessOverride": {"type": "boolean", "description": "True when access required a policy override."},
+        "reason": {"type": "string", "description": "Access justification or ticket reference."},
+        "policyId": {"type": "string", "description": "Policy governing the access."},
+        "sensitivity": {"type": "string", "description": "Sensitivity label for the document."},
+        "ipAddress": {"type": "string", "description": "Source IP for access."},
+        "userAgent": {"type": "string", "description": "Client identifier."}
+      }
+    }
+  },
+  "retentionPolicies": {
+    "auditLogs": {
+      "defaultRetentionDays": 3650,
+      "legalHoldSupported": true,
+      "storageTiers": ["hot", "warm", "cold"],
+      "purgeWindowDays": 30,
+      "notes": "Audit logs retained for 10 years with legal hold overrides."
+    },
+    "accessLogs": {
+      "defaultRetentionDays": 2555,
+      "legalHoldSupported": true,
+      "storageTiers": ["hot", "warm"],
+      "purgeWindowDays": 30,
+      "notes": "Sensitive document access logs retained for 7 years."
+    }
+  },
+  "exportOptions": {
+    "supportedFormats": ["json", "csv"],
+    "deliveryMethods": ["secure_download", "sftp", "webhook"],
+    "redaction": {
+      "supported": true,
+      "fields": ["ipAddress", "userAgent"],
+      "notes": "PII fields can be redacted on export by compliance policy."
+    },
+    "encryption": {
+      "supported": true,
+      "keyManagement": "tenant_managed_keys"
+    }
+  },
+  "deleteOptions": {
+    "softDelete": true,
+    "hardDelete": {
+      "supported": true,
+      "requiresApproval": true,
+      "approverRole": "compliance_officer"
+    },
+    "deletionWorkflow": ["request", "review", "approve", "execute", "verify"],
+    "notes": "Deletion blocked when legal hold is active."
+  },
+  "accessLogging": {
+    "sensitiveDocuments": {
+      "enabled": true,
+      "logOn": ["view", "download", "export", "share"],
+      "maskOnDenied": true,
+      "captureFields": ["accessedBy", "accessAction", "accessedAt", "accessOutcome", "accessOverride", "reason"],
+      "alertOn": ["denied", "override"],
+      "notes": "All sensitive document access events must be recorded with justifications."
+    }
+  }
+}

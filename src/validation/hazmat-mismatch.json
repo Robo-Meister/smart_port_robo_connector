@@ -1,0 +1,26 @@
+{
+  "rule_id": "HAZMAT.DECLARATION_MISMATCH",
+  "severity": "critical",
+  "status": "failed",
+  "message": "Declared hazmat class does not match carrier manifest.",
+  "observed": {
+    "declaration_hazmat_class": "3",
+    "manifest_hazmat_class": "8"
+  },
+  "expected_fields": [
+    "hazmat_class",
+    "un_number",
+    "packing_group"
+  ],
+  "evidence": [
+    {
+      "type": "hazmat_declaration",
+      "reference": "evidence://docs/hazmat-declaration-5501.pdf"
+    },
+    {
+      "type": "carrier_manifest",
+      "reference": "evidence://manifests/vessel-7781.json"
+    }
+  ],
+  "timestamp": "2024-09-15T09:22:41Z"
+}

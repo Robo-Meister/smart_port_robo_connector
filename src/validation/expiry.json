@@ -1,0 +1,17 @@
+{
+  "rule_id": "DOC.EXPIRY_DATE",
+  "severity": "warning",
+  "status": "failed",
+  "message": "Clearance certificate expired before arrival date.",
+  "observed": {
+    "certificate_expiry": "2024-08-30",
+    "arrival_date": "2024-09-02"
+  },
+  "evidence": [
+    {
+      "type": "clearance_certificate",
+      "reference": "evidence://docs/clearance-certificate-88421.pdf"
+    }
+  ],
+  "timestamp": "2024-09-15T09:18:05Z"
+}
