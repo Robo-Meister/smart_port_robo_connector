@@ -86,6 +86,19 @@ Perfect for:
 
 ---
 
+## 🤖 Optional Robo Assistent
+
+Smart Port Logistics can optionally run alongside **Robo Assistent**, an OS for routers and hubs. Robo Assistent enables orchestration of local devices to extend workflow capabilities and unlocks additional options such as:
+
+- Life gate monitoring
+- Number and position checks
+- Container parameter checks
+- Local device status verification
+
+Support for Robo Assistent drivers and device command integration will be added later. For now, this section simply announces the optional availability.
+
+---
+
 ## 📦 Package Info
 
 - **ID**: `smart_port_logistics`
@@ -114,4 +127,3 @@ Perfect for:
 ## 📁 Sample Package
 
 A minimal `.rapp` package demonstrating the expected layout is available in `smart_port_logistics_basic.rapp/`. It contains a `meta.json`, an `app.json` and placeholder workflow, document and regulation files that reflect the capabilities listed above.
-
