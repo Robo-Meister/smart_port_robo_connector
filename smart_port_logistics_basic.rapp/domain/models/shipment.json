@@ -1,0 +1,40 @@
+{
+  "model": "Shipment",
+  "description": "Top-level movement of goods managed by the port application.",
+  "requiredFields": [
+    "id",
+    "reference",
+    "status",
+    "bookingId",
+    "containerIds",
+    "originStopId",
+    "destinationStopId",
+    "shipperPartyId",
+    "consigneePartyId",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique shipment identifier (UUID)."},
+    "reference": {"type": "string", "description": "Human-readable shipment reference."},
+    "status": {"type": "string", "description": "Shipment operational status."},
+    "bookingId": {"type": "string", "description": "Linked booking identifier."},
+    "containerIds": {"type": "array", "items": "string", "description": "Containers assigned to the shipment."},
+    "originStopId": {"type": "string", "description": "Origin stop reference."},
+    "destinationStopId": {"type": "string", "description": "Destination stop reference."},
+    "shipperPartyId": {"type": "string", "description": "Party acting as shipper."},
+    "consigneePartyId": {"type": "string", "description": "Party acting as consignee."},
+    "documents": {"type": "array", "items": "string", "description": "Associated document identifiers."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "booking": {"model": "Booking", "field": "bookingId"},
+    "containers": {"model": "Container", "field": "containerIds"},
+    "originStop": {"model": "Stop", "field": "originStopId"},
+    "destinationStop": {"model": "Stop", "field": "destinationStopId"},
+    "shipper": {"model": "Party", "field": "shipperPartyId"},
+    "consignee": {"model": "Party", "field": "consigneePartyId"},
+    "documents": {"model": "Document", "field": "documents"}
+  }
+}

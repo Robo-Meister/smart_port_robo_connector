@@ -1,0 +1,86 @@
+{
+  "type": "regulation",
+  "name": "Slotting & Access Windows",
+  "policy": "slotting-access-windows",
+  "version": "1.0",
+  "description": "Cutoff, priority, no-show, and gate access window rules for port appointments.",
+  "cutoff": {
+    "name": "T-24h cutoff",
+    "relative_to": "appointment_start",
+    "cutoff_hours": 24,
+    "enforcement": "hard_block",
+    "override_roles": ["operations_manager", "terminal_supervisor"],
+    "notes": "Appointments cannot be created or modified inside the cutoff window without override."
+  },
+  "priority_fee": {
+    "enabled": true,
+    "fee_code": "PRIORITY",
+    "amount": {
+      "currency": "USD",
+      "value": 150
+    },
+    "applies_when": {
+      "window": "priority",
+      "arrival_offset_minutes": 30
+    },
+    "billing": {
+      "bill_to": "carrier",
+      "invoice_description": "Priority access fee"
+    }
+  },
+  "no_show_fee": {
+    "enabled": true,
+    "fee_code": "NO_SHOW",
+    "amount": {
+      "currency": "USD",
+      "value": 250
+    },
+    "grace_period_minutes": 15,
+    "applies_when": {
+      "status_transition": "no-show",
+      "missed_window": true
+    },
+    "billing": {
+      "bill_to": "shipper",
+      "invoice_description": "No-show fee for missed appointment"
+    }
+  },
+  "go_to_gate_window": {
+    "timezone": "America/Los_Angeles",
+    "open_before_minutes": 90,
+    "close_before_minutes": 30,
+    "arrival_status_required": "checked-in",
+    "late_arrival_handling": "deny_or_rebook"
+  },
+  "out_of_window": {
+    "handling": "deny",
+    "allowed_with_override_roles": ["terminal_supervisor"],
+    "reason_codes": [
+      "arrived_early",
+      "arrived_late",
+      "documentation_incomplete",
+      "equipment_mismatch"
+    ],
+    "rebook_action": "apply_priority_fee_if_available"
+  },
+  "metadata": {
+    "required_fields": [
+      "appointment_id",
+      "terminal_id",
+      "carrier_id",
+      "container_number"
+    ],
+    "optional_fields": [
+      "booking_reference",
+      "driver_id",
+      "equipment_type",
+      "hazmat_flag",
+      "customer_tier"
+    ],
+    "audit_fields": {
+      "override_reason": "string",
+      "override_approved_by": "string",
+      "policy_version": "string"
+    }
+  }
+}

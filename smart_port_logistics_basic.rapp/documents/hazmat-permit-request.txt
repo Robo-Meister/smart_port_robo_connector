@@ -1,1 +1,17 @@
-Hazmat permit request placeholder
+Hazardous Materials Permit Request
+
+Checklist:
+Criticality: %%criticality%%
+Applicable Cargo Types: %%cargo_types%%
+Blocking Rules: %%blocking_rules%%
+
+Company: %%company_name%%
+Contact Person: %%contact_person%%
+Material Name: %%material_name%%
+UN Number: %%un_number%%
+Quantity: %%quantity%%
+Storage Location: %%storage_location%%
+Handling Instructions: %%handling_instructions%%
+
+Attachments:
+%%content%%

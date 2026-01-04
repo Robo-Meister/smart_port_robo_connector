@@ -1,0 +1,30 @@
+{
+  "model": "Stop",
+  "description": "Discrete location/time window in a shipment or move plan.",
+  "requiredFields": [
+    "id",
+    "locationCode",
+    "stopType",
+    "plannedArrivalAt",
+    "plannedDepartureAt",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique stop identifier (UUID)."},
+    "locationCode": {"type": "string", "description": "UN/LOCODE or terminal location code."},
+    "stopType": {"type": "string", "description": "Purpose of the stop (origin, transshipment, destination)."},
+    "plannedArrivalAt": {"type": "string", "format": "date-time"},
+    "plannedDepartureAt": {"type": "string", "format": "date-time"},
+    "actualArrivalAt": {"type": "string", "format": "date-time"},
+    "actualDepartureAt": {"type": "string", "format": "date-time"},
+    "terminal": {"type": "string", "description": "Terminal or facility name."},
+    "berth": {"type": "string", "description": "Assigned berth if applicable."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "movesFrom": {"model": "Move", "field": "fromStopId"},
+    "movesTo": {"model": "Move", "field": "toStopId"}
+  }
+}

@@ -14,28 +14,70 @@
       "name": "propose",
       "actions": [
         {
-          "action_id": "show_alternative_ports_or_slots",
+          "action_id": "show_alternative_ports_or_slot_chains",
           "inputs": {
             "shipment_id": "{shipment_id}",
             "constraints": "{constraints}",
-            "preferred_ports": "{preferred_ports}"
-          }
+            "preferred_ports": "{preferred_ports}",
+            "required_resources": [
+              "gate",
+              "yard",
+              "crane",
+              "berth"
+            ]
+          },
+          "actor_type": "operations"
         },
         {
-          "action_id": "assemble_candidate_rebooking_plan",
+          "action_id": "validate_rebooking_guardrails",
           "inputs": {
-            "shipment_id": "{shipment_id}",
             "alternatives": "{alternatives}",
-            "plan_constraints": "{plan_constraints}"
-          }
+            "guardrail_policy": "policies/rebooking.json",
+            "shipment_value": "{shipment_value}"
+          },
+          "actor_type": "compliance"
         },
         {
           "action_id": "generate_what_if_preview",
           "inputs": {
             "shipment_id": "{shipment_id}",
-            "rebooking_plan_id": "{rebooking_plan_id}",
-            "cost_model": "{cost_model}"
-          }
+            "alternatives": "{allowed_alternatives}",
+            "cost_model": "{cost_model}",
+            "batch_mode": "per_alternative",
+            "enrich_field": "what_if_preview"
+          },
+          "actor_type": "operations"
+        },
+        {
+          "action_id": "rank_rebooking_alternatives",
+          "inputs": {
+            "alternatives": "{enriched_alternatives}",
+            "guardrail_policy": "policies/rebooking.json",
+            "cost_model": "{cost_model}",
+            "sla_thresholds": "{sla_thresholds}",
+            "ranking_weights": "{ranking_weights}"
+          },
+          "actor_type": "operations"
+        },
+        {
+          "action_id": "handle_insufficient_rebooking_alternatives",
+          "inputs": {
+            "ranked_alternatives": "{ranked_alternatives}",
+            "minimum_required": 3,
+            "disallowed_reasons": "{disallowed_reasons}",
+            "fallback_strategy": "return_fewer_with_reasons"
+          },
+          "actor_type": "operations"
+        },
+        {
+          "action_id": "assemble_candidate_rebooking_plan",
+          "inputs": {
+            "shipment_id": "{shipment_id}",
+            "top_3_alternatives": "{top_3_or_fewer_alternatives}",
+            "plan_constraints": "{plan_constraints}",
+            "slot_chain_constraints": "{slot_chain_constraints}"
+          },
+          "actor_type": "operations"
         }
       ],
       "what_if_preview_schema": {
@@ -66,7 +108,8 @@
             "rebooking_plan_id": "{rebooking_plan_id}",
             "approver_group": "{approver_group}",
             "urgency": "{urgency}"
-          }
+          },
+          "actor_type": "operations"
         },
         {
           "action_id": "validate_rebooking_guardrails",
@@ -74,7 +117,8 @@
             "rebooking_plan_id": "{rebooking_plan_id}",
             "guardrail_policy": "{guardrail_policy}",
             "shipment_value": "{shipment_value}"
-          }
+          },
+          "actor_type": "compliance"
         },
         {
           "action_id": "capture_destination_change_approval",
@@ -82,7 +126,8 @@
             "shipment_id": "{shipment_id}",
             "destination_change": "{destination_change}",
             "approver": "{approver}"
-          }
+          },
+          "actor_type": "customer_success"
         }
       ],
       "policy_reference": "policies/rebooking.json"
@@ -96,15 +141,18 @@
             "shipment_id": "{shipment_id}",
             "new_eta": "{new_eta}",
             "reason": "{reason}"
-          }
+          },
+          "actor_type": "operations"
         },
         {
-          "action_id": "confirm_new_slot",
+          "action_id": "confirm_slot_chain",
           "inputs": {
-            "slot_request_id": "{slot_request_id}",
+            "slot_chain_request_id": "{slot_chain_request_id}",
             "container_id": "{container_id}",
-            "requested_window": "{requested_window}"
-          }
+            "requested_window": "{requested_window}",
+            "dependency_rules": "{dependency_rules}"
+          },
+          "actor_type": "port_ops"
         },
         {
           "action_id": "notify_stakeholders",
@@ -112,7 +160,8 @@
             "shipment_id": "{shipment_id}",
             "notification_channels": "{notification_channels}",
             "message_template": "{message_template}"
-          }
+          },
+          "actor_type": "customer_success"
         }
       ],
       "rollback": {
@@ -123,9 +172,9 @@
   ],
   "partial_failure_scenarios": [
     {
-      "scenario": "Slot confirmed but ETA update fails",
+      "scenario": "Slot chain confirmed but ETA update fails",
       "signals": [
-        "slot_confirmed",
+        "slot_chain_confirmed",
         "eta_update_failed"
       ],
       "impact": "Rebooking executed without updated customer ETA",
@@ -179,6 +228,7 @@
   ],
   "policy_references": {
     "resilience": "policies/resilience.json",
-    "rebooking_guardrails": "policies/rebooking.json"
+    "rebooking_guardrails": "policies/rebooking.json",
+    "rebooking_auto_suggest": "policies/rebooking-auto-suggest.json"
   }
 }

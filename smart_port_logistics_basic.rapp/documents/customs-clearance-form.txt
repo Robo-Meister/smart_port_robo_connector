@@ -1,1 +1,17 @@
-Customs clearance form placeholder
+Customs Clearance Form
+
+Checklist:
+Criticality: %%criticality%%
+Applicable Cargo Types: %%cargo_types%%
+Blocking Rules: %%blocking_rules%%
+
+Importer: %%importer_name%%
+Exporter: %%exporter_name%%
+Shipment Reference: %%shipment_reference%%
+Port of Entry: %%port_name%%
+Cargo Description: %%cargo_description%%
+Declared Value: %%declared_value%%
+Clearance Deadline: %%clearance_deadline%%
+
+Supporting Documents:
+%%content%%

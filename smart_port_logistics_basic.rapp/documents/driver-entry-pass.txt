@@ -1,1 +1,17 @@
-Driver entry pass placeholder
+Driver Entry Pass
+
+Checklist:
+Criticality: %%criticality%%
+Applicable Cargo Types: %%cargo_types%%
+Blocking Rules: %%blocking_rules%%
+
+Driver Name: %%driver_name%%
+License Number: %%license_number%%
+Company: %%company_name%%
+Vehicle Registration: %%vehicle_registration%%
+Arrival Date: %%arrival_date%%
+Purpose of Entry: %%purpose%%
+Authorized By: %%authorized_by%%
+
+Conditions:
+%%content%%

@@ -1,0 +1,36 @@
+{
+  "model": "Container",
+  "description": "Physical container tracked through the port lifecycle.",
+  "requiredFields": [
+    "id",
+    "containerNumber",
+    "status",
+    "bookingId",
+    "shipmentId",
+    "currentMoveId",
+    "ownerPartyId",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique container identifier (UUID)."},
+    "containerNumber": {"type": "string", "description": "ISO container number."},
+    "status": {"type": "string", "description": "Lifecycle status of the container."},
+    "bookingId": {"type": "string", "description": "Booking that reserved this container."},
+    "shipmentId": {"type": "string", "description": "Shipment that owns this container."},
+    "currentMoveId": {"type": "string", "description": "Latest move record for the container."},
+    "ownerPartyId": {"type": "string", "description": "Party owning or operating the container."},
+    "sealNumber": {"type": "string", "description": "Seal identifier."},
+    "grossWeightKg": {"type": "number", "description": "Declared gross weight in kilograms."},
+    "documents": {"type": "array", "items": "string", "description": "Associated document identifiers."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "booking": {"model": "Booking", "field": "bookingId"},
+    "shipment": {"model": "Shipment", "field": "shipmentId"},
+    "currentMove": {"model": "Move", "field": "currentMoveId"},
+    "owner": {"model": "Party", "field": "ownerPartyId"},
+    "documents": {"model": "Document", "field": "documents"}
+  }
+}

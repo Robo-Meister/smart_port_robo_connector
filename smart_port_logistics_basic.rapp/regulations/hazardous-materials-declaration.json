@@ -1,3 +1,5 @@
 {
-  "rule": "Check hazardous materials declaration"
+  "type": "regulation",
+  "name": "Hazardous Materials Declaration",
+  "description": "Requires disclosure and labeling of dangerous goods per U.S. DOT and Port rules."
 }

@@ -1,0 +1,35 @@
+{
+  "description": "Canonical event envelope for port domain replay.",
+  "requiredFields": [
+    "eventId",
+    "eventType",
+    "entityType",
+    "entityId",
+    "idempotencyKey",
+    "occurredAt",
+    "recordedAt",
+    "actor",
+    "payload"
+  ],
+  "fields": {
+    "eventId": {"type": "string", "description": "Unique event identifier (UUID)."},
+    "eventType": {"type": "string", "description": "Event name (e.g., container.status.updated)."},
+    "entityType": {"type": "string", "description": "Aggregate type affected by the event."},
+    "entityId": {"type": "string", "description": "Aggregate identifier."},
+    "idempotencyKey": {"type": "string", "description": "Stable key used to deduplicate events."},
+    "occurredAt": {"type": "string", "format": "date-time", "description": "Source timestamp."},
+    "recordedAt": {"type": "string", "format": "date-time", "description": "Ingestion timestamp."},
+    "actor": {
+      "type": "object",
+      "description": "Metadata about who/what initiated the event.",
+      "requiredFields": ["actorId", "actorType"],
+      "fields": {
+        "actorId": {"type": "string", "description": "User, system, or partner identifier."},
+        "actorType": {"type": "string", "description": "user, system, integration, device."},
+        "displayName": {"type": "string", "description": "Human-friendly label."},
+        "roles": {"type": "array", "items": "string", "description": "Actor roles at event time."}
+      }
+    },
+    "payload": {"type": "object", "description": "Event-specific data used to rebuild state."}
+  }
+}

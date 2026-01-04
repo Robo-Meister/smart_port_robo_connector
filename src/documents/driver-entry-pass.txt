@@ -1,5 +1,10 @@
 Driver Entry Pass
 
+Checklist:
+Criticality: %%criticality%%
+Applicable Cargo Types: %%cargo_types%%
+Blocking Rules: %%blocking_rules%%
+
 Driver Name: %%driver_name%%
 License Number: %%license_number%%
 Company: %%company_name%%

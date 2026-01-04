@@ -1,0 +1,117 @@
+{
+  "schema_version": "1.0",
+  "actors": [
+    {
+      "actor_type": "compliance",
+      "supports_actions": [
+        "validate_documents",
+        "validate_rebooking_guardrails"
+      ],
+      "scopes": [
+        "customs",
+        "hazmat",
+        "security"
+      ],
+      "availability": "business_hours",
+      "quality": "high"
+    },
+    {
+      "actor_type": "customer_success",
+      "supports_actions": [
+        "capture_destination_change_approval",
+        "notify_stakeholders"
+      ],
+      "scopes": [
+        "client",
+        "approvals"
+      ],
+      "availability": "business_hours",
+      "quality": "high"
+    },
+    {
+      "actor_type": "dispatch",
+      "supports_actions": [
+        "assign_driver",
+        "notify_stakeholders"
+      ],
+      "scopes": [
+        "carrier",
+        "driver"
+      ],
+      "availability": "24x7",
+      "quality": "standard"
+    },
+    {
+      "actor_type": "gate_ops",
+      "supports_actions": [
+        "capture_anpr_read",
+        "emit_gate_event",
+        "ingest_gate_arrival",
+        "ingest_gate_departure",
+        "open_gate_barrier",
+        "read_scale_weight",
+        "record_gate_check_in",
+        "record_gate_check_out",
+        "scan_qr_token",
+        "scan_rfid_badge"
+      ],
+      "scopes": [
+        "gate",
+        "yard"
+      ],
+      "availability": "24x7",
+      "quality": "standard"
+    },
+    {
+      "actor_type": "operations",
+      "supports_actions": [
+        "show_alternative_ports_or_slots",
+        "show_alternative_ports_or_slot_chains",
+        "rank_rebooking_alternatives",
+        "assemble_candidate_rebooking_plan",
+        "handle_insufficient_rebooking_alternatives",
+        "generate_what_if_preview",
+        "route_for_operations_approval",
+        "update_etas"
+      ],
+      "scopes": [
+        "rebooking",
+        "disruption",
+        "planning"
+      ],
+      "availability": "24x7",
+      "quality": "high"
+    },
+    {
+      "actor_type": "port_ops",
+      "supports_actions": [
+        "detect_inbound_shipment",
+        "suggest_time_slots",
+        "suggest_slot_chain",
+        "confirm_new_slot",
+        "confirm_slot_chain",
+        "reserve_resource_chain"
+      ],
+      "scopes": [
+        "terminal",
+        "gate",
+        "yard"
+      ],
+      "availability": "24x7",
+      "quality": "standard"
+    },
+    {
+      "actor_type": "security",
+      "supports_actions": [
+        "validate_exit_authorization",
+        "validate_gate_credentials"
+      ],
+      "scopes": [
+        "access_control",
+        "compliance"
+      ],
+      "availability": "24x7",
+      "quality": "high"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "model": "Party",
+  "description": "Organization or individual participating in port workflows.",
+  "requiredFields": [
+    "id",
+    "name",
+    "partyType",
+    "roles",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique party identifier (UUID)."},
+    "name": {"type": "string", "description": "Legal or display name."},
+    "partyType": {"type": "string", "description": "Organization or individual."},
+    "roles": {"type": "array", "items": "string", "description": "Operational roles (shipper, carrier, terminal)."},
+    "contactEmail": {"type": "string", "description": "Primary contact email."},
+    "contactPhone": {"type": "string", "description": "Primary contact phone."},
+    "identifiers": {"type": "object", "description": "External identifiers (SCAC, IMO, tax IDs)."},
+    "address": {"type": "object", "description": "Primary mailing or registered address."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "shipments": {"model": "Shipment", "field": "shipperPartyId"},
+    "bookings": {"model": "Booking", "field": "shipperPartyId"},
+    "containers": {"model": "Container", "field": "ownerPartyId"},
+    "documents": {"model": "Document", "field": "ownerPartyId"}
+  }
+}

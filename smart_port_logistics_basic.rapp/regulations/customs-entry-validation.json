@@ -1,3 +1,5 @@
 {
-  "rule": "Validate customs entry documentation"
+  "type": "regulation",
+  "name": "Customs Entry Validation",
+  "description": "Ensures all inbound shipments comply with U.S. Customs entry requirements."
 }

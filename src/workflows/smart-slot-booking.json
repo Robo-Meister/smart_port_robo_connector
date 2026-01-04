@@ -8,16 +8,25 @@
         "container_id": "{container_id}",
         "arrival_eta": "{arrival_eta}",
         "port_code": "{port_code}"
-      }
+      },
+      "actor_type": "port_ops"
     },
     {
-      "action_id": "suggest_time_slots",
+      "action_id": "suggest_slot_chain",
       "inputs": {
         "container_id": "{container_id}",
         "arrival_eta": "{arrival_eta}",
         "preferred_window": "{preferred_window}",
-        "equipment_type": "{equipment_type}"
-      }
+        "equipment_type": "{equipment_type}",
+        "required_resources": [
+          "gate",
+          "yard",
+          "crane",
+          "berth"
+        ],
+        "dependency_rules": "{dependency_rules}"
+      },
+      "actor_type": "port_ops"
     },
     {
       "action_id": "validate_documents",
@@ -25,35 +34,54 @@
         "shipment_id": "{shipment_id}",
         "document_ids": "{document_ids}",
         "document_type": "{document_type}"
-      }
+      },
+      "actor_type": "compliance"
+    },
+    {
+      "action_id": "reserve_resource_chain",
+      "inputs": {
+        "slot_chain_id": "{slot_chain_id}",
+        "resource_preferences": "{resource_preferences}",
+        "parallelism_limits": "{parallelism_limits}"
+      },
+      "actor_type": "port_ops"
+    },
+    {
+      "action_id": "confirm_slot_chain",
+      "inputs": {
+        "slot_chain_id": "{slot_chain_id}",
+        "confirmation_window": "{confirmation_window}"
+      },
+      "actor_type": "port_ops"
     },
     {
       "action_id": "assign_driver",
       "inputs": {
         "container_id": "{container_id}",
-        "slot_id": "{slot_id}",
+        "slot_chain_id": "{slot_chain_id}",
         "carrier_id": "{carrier_id}",
         "driver_preferences": "{driver_preferences}"
-      }
+      },
+      "actor_type": "dispatch"
     }
   ],
   "partial_failure_scenarios": [
     {
-      "scenario": "Document validation succeeds but slot booking fails",
+      "scenario": "Document validation succeeds but slot chain booking fails",
       "signals": [
         "documents_validated",
-        "slot_booking_api_error"
+        "slot_chain_booking_error"
       ],
       "impact": "Shipment cleared but no confirmed slot",
       "resolution_path": "booking_failure_recovery"
     },
     {
-      "scenario": "Slot reserved but driver assignment fails",
+      "scenario": "Slot chain reserved but driver assignment fails",
       "signals": [
-        "slot_reserved",
+        "slot_chain_reserved",
         "driver_assignment_failed"
       ],
-      "impact": "Slot held without pickup plan",
+      "impact": "Slot chain held without pickup plan",
       "resolution_path": "driver_assignment_recovery"
     }
   ],
@@ -83,11 +111,13 @@
       "scope": "container_id",
       "lock_key": "container:{container_id}:move",
       "held_during_steps": [
-        "suggest_time_slots",
+        "suggest_slot_chain",
+        "reserve_resource_chain",
+        "confirm_slot_chain",
         "assign_driver"
       ],
       "release_conditions": [
-        "slot_confirmed",
+        "slot_chain_confirmed",
         "workflow_aborted"
       ]
     }

@@ -1,0 +1,50 @@
+{
+  "type": "regulation",
+  "name": "Rebooking Auto-Suggest",
+  "policy": "rebooking-auto-suggest",
+  "version": "1.0",
+  "description": "Filters and ranking criteria for automated rebooking suggestions.",
+  "filters": {
+    "guardrail_policy": "rebooking-guardrails",
+    "operational_constraints": {
+      "resource_availability": {
+        "required_resources": ["gate", "yard", "crane", "berth"],
+        "availability_window_hours": 12,
+        "fallback_action": "exclude_candidate"
+      },
+      "hazmat_clearance": {
+        "requires_clearance": true,
+        "action_on_violation": "exclude_candidate"
+      },
+      "destination_change_approval": {
+        "required": true,
+        "action_on_missing": "route_for_operations_approval"
+      }
+    }
+  },
+  "ranking": {
+    "criteria": [
+      {
+        "name": "eta_improvement_hours",
+        "order": "desc",
+        "weight": 0.35
+      },
+      {
+        "name": "cost_impact",
+        "order": "asc",
+        "weight": 0.25
+      },
+      {
+        "name": "sla_risk",
+        "order": "asc",
+        "weight": 0.25
+      },
+      {
+        "name": "congestion_score",
+        "order": "asc",
+        "weight": 0.15
+      }
+    ],
+    "top_n": 3
+  }
+}

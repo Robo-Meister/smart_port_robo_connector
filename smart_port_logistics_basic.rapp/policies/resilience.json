@@ -1,0 +1,52 @@
+{
+  "type": "regulation",
+  "name": "Resilience Policy",
+  "policy": "resilience",
+  "version": "1.0",
+  "description": "Standard retry, backoff, DLQ, and manual rerun behavior for port workflows.",
+  "retries": {
+    "max_attempts": 5,
+    "backoff": {
+      "strategy": "exponential",
+      "base_seconds": 5,
+      "max_seconds": 300,
+      "jitter": "full"
+    },
+    "retryable_errors": [
+      "network_timeout",
+      "rate_limited",
+      "slot_service_unavailable",
+      "transient_portal_error"
+    ],
+    "non_retryable_errors": [
+      "invalid_payload",
+      "authorization_failed",
+      "policy_violation"
+    ]
+  },
+  "dead_letter_queue": {
+    "enabled": true,
+    "queue": "dlq/port-ops",
+    "retention_hours": 168,
+    "alert_on_enqueue": true,
+    "alert_channels": [
+      "ops-console",
+      "pagerduty"
+    ]
+  },
+  "manual_rerun": {
+    "enabled": true,
+    "roles_allowed": [
+      "Operations Manager",
+      "Port Authority Supervisor"
+    ],
+    "requires_reason": true,
+    "max_reruns_per_item": 2,
+    "safety_checks": [
+      "confirm_slot_availability",
+      "confirm_container_hold_status",
+      "validate_latest_documents"
+    ],
+    "audit_log_destination": "audit/resilience-reruns"
+  }
+}

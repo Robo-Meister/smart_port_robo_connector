@@ -1,5 +1,10 @@
 Customs Clearance Form
 
+Checklist:
+Criticality: %%criticality%%
+Applicable Cargo Types: %%cargo_types%%
+Blocking Rules: %%blocking_rules%%
+
 Importer: %%importer_name%%
 Exporter: %%exporter_name%%
 Shipment Reference: %%shipment_reference%%

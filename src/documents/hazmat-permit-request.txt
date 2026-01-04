@@ -1,5 +1,10 @@
 Hazardous Materials Permit Request
 
+Checklist:
+Criticality: %%criticality%%
+Applicable Cargo Types: %%cargo_types%%
+Blocking Rules: %%blocking_rules%%
+
 Company: %%company_name%%
 Contact Person: %%contact_person%%
 Material Name: %%material_name%%

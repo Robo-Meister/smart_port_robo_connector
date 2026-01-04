@@ -1,0 +1,30 @@
+{
+  "model": "Document",
+  "description": "Compliance or operational document tied to port activities.",
+  "requiredFields": [
+    "id",
+    "documentType",
+    "status",
+    "ownerPartyId",
+    "relatedEntityType",
+    "relatedEntityId",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique document identifier (UUID)."},
+    "documentType": {"type": "string", "description": "Document classification (e.g., bill_of_lading)."},
+    "status": {"type": "string", "description": "Lifecycle status of the document."},
+    "ownerPartyId": {"type": "string", "description": "Party responsible for the document."},
+    "relatedEntityType": {"type": "string", "description": "Linked entity type (Shipment, Booking, Container)."},
+    "relatedEntityId": {"type": "string", "description": "Linked entity identifier."},
+    "version": {"type": "integer", "description": "Version number for updates."},
+    "issuedAt": {"type": "string", "format": "date-time"},
+    "expiresAt": {"type": "string", "format": "date-time"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "owner": {"model": "Party", "field": "ownerPartyId"}
+  }
+}

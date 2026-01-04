@@ -2,15 +2,24 @@
  "id": "smart_port_logistics",
   "key": "smart_port_logistics",
   "name": "Smart Port Logistics",
+  "type": "app",
   "description": "California port workflows for imports, booking, tracking, and document checks at Los Angeles and Long Beach.",
-  "version": "1.0.0",
+  "mainImage": "/static/apps/smart-port-logistics/cover.png",
+  "screenshots": [
+    "/static/apps/smart-port-logistics/screenshot-01.png",
+    "/static/apps/smart-port-logistics/screenshot-02.png"
+  ],
+  "tags": ["logistics", "port", "supply-chain", "booking", "compliance"],
+  "version": "1.0.1",
   "entry": "app.json",
   "workflows": [
     "workflows/smart-slot-booking.json",
     "workflows/shipment-rebooking.json",
     "workflows/customs-doc-validation.json",
     "workflows/port-delay-escalation.json",
-    "workflows/last-mile-delivery-tracking.json"
+    "workflows/last-mile-delivery-tracking.json",
+    "workflows/ra-gate-check-in.json",
+    "workflows/ra-gate-check-out.json"
   ],
   "documents": [
     "documents/port-booking-request-template.txt",

@@ -1,0 +1,158 @@
+{
+  "type": "workflow",
+  "name": "Robo Assistent Gate Check-Out",
+  "device_capabilities": [
+    "anpr",
+    "rfid",
+    "qr",
+    "scale",
+    "barrier",
+    "camera"
+  ],
+  "steps": [
+    {
+      "action_id": "ingest_gate_departure",
+      "inputs": {
+        "gate_id": "{gate_id}",
+        "lane_id": "{lane_id}",
+        "direction": "outbound",
+        "departure_time": "{departure_time}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "capture_anpr_read",
+      "inputs": {
+        "camera_id": "{camera_id}",
+        "vehicle_plate": "{vehicle_plate}",
+        "confidence_threshold": "{confidence_threshold}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "scan_rfid_badge",
+      "inputs": {
+        "reader_id": "{reader_id}",
+        "rfid_tag": "{rfid_tag}",
+        "driver_id": "{driver_id}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "scan_qr_token",
+      "inputs": {
+        "scanner_id": "{scanner_id}",
+        "qr_payload": "{qr_payload}",
+        "release_reference": "{release_reference}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "read_scale_weight",
+      "inputs": {
+        "scale_id": "{scale_id}",
+        "weight_kg": "{weight_kg}",
+        "tare_weight_kg": "{tare_weight_kg}",
+        "tolerance_percent": "{tolerance_percent}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "validate_exit_authorization",
+      "inputs": {
+        "release_reference": "{release_reference}",
+        "vehicle_plate": "{vehicle_plate}",
+        "rfid_tag": "{rfid_tag}",
+        "qr_payload": "{qr_payload}",
+        "container_id": "{container_id}",
+        "driver_id": "{driver_id}"
+      },
+      "actor_type": "security"
+    },
+    {
+      "action_id": "record_gate_check_out",
+      "inputs": {
+        "gate_check_id": "{gate_check_id}",
+        "status": "verified",
+        "evidence_bundle": "{evidence_bundle}",
+        "weight_kg": "{weight_kg}",
+        "seal_status": "{seal_status}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "open_gate_barrier",
+      "inputs": {
+        "barrier_id": "{barrier_id}",
+        "gate_check_id": "{gate_check_id}",
+        "clearance_window_seconds": "{clearance_window_seconds}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "emit_gate_event",
+      "inputs": {
+        "event_type": "gate_check.out.completed",
+        "gate_check_id": "{gate_check_id}",
+        "container_id": "{container_id}",
+        "vehicle_id": "{vehicle_id}"
+      },
+      "actor_type": "gate_ops"
+    }
+  ],
+  "partial_failure_scenarios": [
+    {
+      "scenario": "Release reference missing or invalid",
+      "signals": [
+        "release_reference_invalid",
+        "release_reference_missing"
+      ],
+      "impact": "Gate exit denied and release validation required",
+      "resolution_path": "release_reference_review"
+    },
+    {
+      "scenario": "Seal status flagged as tampered",
+      "signals": [
+        "seal_tampered"
+      ],
+      "impact": "Container diverted to inspection bay",
+      "resolution_path": "seal_tamper_review"
+    }
+  ],
+  "resolution_paths": {
+    "release_reference_review": {
+      "actions": [
+        "Route driver to release desk",
+        "Validate release with carrier",
+        "Approve or deny exit"
+      ],
+      "fallback": "Hold container in outbound buffer",
+      "owner": "Gate Ops"
+    },
+    "seal_tamper_review": {
+      "actions": [
+        "Capture high-resolution images",
+        "Notify security",
+        "Initiate compliance hold"
+      ],
+      "fallback": "Block gate and alert yard supervisor",
+      "owner": "Security"
+    }
+  },
+  "concurrency_locks": [
+    {
+      "resource": "gate_check",
+      "scope": "gate_check_id",
+      "lock_key": "gate_check:{gate_check_id}",
+      "held_during_steps": [
+        "validate_exit_authorization",
+        "record_gate_check_out",
+        "open_gate_barrier"
+      ],
+      "release_conditions": [
+        "gate_check_completed",
+        "gate_check_failed"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "type": "workflow",
+  "name": "Robo Assistent Gate Check-In",
+  "device_capabilities": [
+    "anpr",
+    "rfid",
+    "qr",
+    "scale",
+    "barrier",
+    "camera"
+  ],
+  "steps": [
+    {
+      "action_id": "ingest_gate_arrival",
+      "inputs": {
+        "gate_id": "{gate_id}",
+        "lane_id": "{lane_id}",
+        "direction": "inbound",
+        "arrival_time": "{arrival_time}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "capture_anpr_read",
+      "inputs": {
+        "camera_id": "{camera_id}",
+        "vehicle_plate": "{vehicle_plate}",
+        "confidence_threshold": "{confidence_threshold}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "scan_rfid_badge",
+      "inputs": {
+        "reader_id": "{reader_id}",
+        "rfid_tag": "{rfid_tag}",
+        "driver_id": "{driver_id}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "scan_qr_token",
+      "inputs": {
+        "scanner_id": "{scanner_id}",
+        "qr_payload": "{qr_payload}",
+        "appointment_id": "{appointment_id}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "read_scale_weight",
+      "inputs": {
+        "scale_id": "{scale_id}",
+        "weight_kg": "{weight_kg}",
+        "tare_weight_kg": "{tare_weight_kg}",
+        "tolerance_percent": "{tolerance_percent}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "validate_gate_credentials",
+      "inputs": {
+        "appointment_id": "{appointment_id}",
+        "vehicle_plate": "{vehicle_plate}",
+        "rfid_tag": "{rfid_tag}",
+        "qr_payload": "{qr_payload}",
+        "container_id": "{container_id}",
+        "carrier_id": "{carrier_id}"
+      },
+      "actor_type": "security"
+    },
+    {
+      "action_id": "record_gate_check_in",
+      "inputs": {
+        "gate_check_id": "{gate_check_id}",
+        "status": "verified",
+        "evidence_bundle": "{evidence_bundle}",
+        "weight_kg": "{weight_kg}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "open_gate_barrier",
+      "inputs": {
+        "barrier_id": "{barrier_id}",
+        "gate_check_id": "{gate_check_id}",
+        "clearance_window_seconds": "{clearance_window_seconds}"
+      },
+      "actor_type": "gate_ops"
+    },
+    {
+      "action_id": "emit_gate_event",
+      "inputs": {
+        "event_type": "gate_check.in.completed",
+        "gate_check_id": "{gate_check_id}",
+        "container_id": "{container_id}",
+        "vehicle_id": "{vehicle_id}"
+      },
+      "actor_type": "gate_ops"
+    }
+  ],
+  "partial_failure_scenarios": [
+    {
+      "scenario": "Identity scans mismatch appointment data",
+      "signals": [
+        "anpr_mismatch",
+        "rfid_mismatch",
+        "qr_invalid"
+      ],
+      "impact": "Gate access denied and manual verification required",
+      "resolution_path": "manual_identity_review"
+    },
+    {
+      "scenario": "Scale reading outside tolerance",
+      "signals": [
+        "weight_out_of_range"
+      ],
+      "impact": "Container flagged for inspection",
+      "resolution_path": "weight_discrepancy_review"
+    }
+  ],
+  "resolution_paths": {
+    "manual_identity_review": {
+      "actions": [
+        "Route driver to manual gate window",
+        "Capture secondary ID proof",
+        "Override or deny gate entry"
+      ],
+      "fallback": "Hold lane and notify operations",
+      "owner": "Gate Ops"
+    },
+    "weight_discrepancy_review": {
+      "actions": [
+        "Re-run scale capture",
+        "Inspect seal and container",
+        "Escalate to compliance if discrepancy persists"
+      ],
+      "fallback": "Move container to inspection bay",
+      "owner": "Yard Ops"
+    }
+  },
+  "concurrency_locks": [
+    {
+      "resource": "gate_check",
+      "scope": "gate_check_id",
+      "lock_key": "gate_check:{gate_check_id}",
+      "held_during_steps": [
+        "validate_gate_credentials",
+        "record_gate_check_in",
+        "open_gate_barrier"
+      ],
+      "release_conditions": [
+        "gate_check_completed",
+        "gate_check_failed"
+      ]
+    }
+  ]
+}

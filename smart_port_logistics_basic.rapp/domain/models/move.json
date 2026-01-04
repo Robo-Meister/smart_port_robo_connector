@@ -1,0 +1,36 @@
+{
+  "model": "Move",
+  "description": "Operational movement of a container between stops and/or assets.",
+  "requiredFields": [
+    "id",
+    "containerId",
+    "status",
+    "fromStopId",
+    "toStopId",
+    "plannedStartAt",
+    "plannedEndAt",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique move identifier (UUID)."},
+    "containerId": {"type": "string", "description": "Container being moved."},
+    "status": {"type": "string", "description": "Move execution status."},
+    "fromStopId": {"type": "string", "description": "Origin stop for the move."},
+    "toStopId": {"type": "string", "description": "Destination stop for the move."},
+    "mode": {"type": "string", "description": "Transport mode (vessel, truck, rail)."},
+    "vesselId": {"type": "string", "description": "Vessel assigned to the move, if applicable."},
+    "plannedStartAt": {"type": "string", "format": "date-time"},
+    "plannedEndAt": {"type": "string", "format": "date-time"},
+    "actualStartAt": {"type": "string", "format": "date-time"},
+    "actualEndAt": {"type": "string", "format": "date-time"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "container": {"model": "Container", "field": "containerId"},
+    "fromStop": {"model": "Stop", "field": "fromStopId"},
+    "toStop": {"model": "Stop", "field": "toStopId"},
+    "vessel": {"model": "Vessel", "field": "vesselId"}
+  }
+}

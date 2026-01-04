@@ -1,0 +1,118 @@
+{
+  "type": "event_payloads",
+  "name": "Gate Check & Device Event Payloads",
+  "event_payloads": [
+    {
+      "eventType": "gate_check.initiated",
+      "entityType": "GateCheck",
+      "description": "Gate check session opened for inbound or outbound processing.",
+      "requiredFields": [
+        "gateCheckId",
+        "gateId",
+        "laneId",
+        "direction",
+        "appointmentId"
+      ],
+      "fields": {
+        "gateCheckId": {"type": "string", "description": "Gate check session identifier."},
+        "gateId": {"type": "string", "description": "Gate identifier."},
+        "laneId": {"type": "string", "description": "Lane identifier."},
+        "direction": {"type": "string", "description": "inbound or outbound."},
+        "appointmentId": {"type": "string", "description": "Slot or appointment reference."},
+        "containerId": {"type": "string", "description": "Container reference."},
+        "vehicleId": {"type": "string", "description": "Vehicle reference."},
+        "driverId": {"type": "string", "description": "Driver reference."},
+        "deviceSessionId": {"type": "string", "description": "Robo Assistent device session."}
+      }
+    },
+    {
+      "eventType": "gate.device.reading.captured",
+      "entityType": "GateDeviceReading",
+      "description": "Raw device reading captured from ANPR, RFID, QR, or scale.",
+      "requiredFields": [
+        "deviceId",
+        "deviceType",
+        "readingType",
+        "capturedAt"
+      ],
+      "fields": {
+        "deviceId": {"type": "string", "description": "Device identifier."},
+        "deviceType": {"type": "string", "description": "anpr, rfid, qr, scale, camera."},
+        "readingType": {"type": "string", "description": "plate, tag, token, weight, image."},
+        "rawValue": {"type": "string", "description": "Unparsed reading payload."},
+        "normalizedValue": {"type": "string", "description": "Normalized reading value."},
+        "confidence": {"type": "number", "description": "Confidence score for the reading."},
+        "evidenceUri": {"type": "string", "description": "Evidence location for audit."},
+        "capturedAt": {"type": "string", "format": "date-time", "description": "Timestamp of capture."}
+      }
+    },
+    {
+      "eventType": "gate_check.in.completed",
+      "entityType": "GateCheck",
+      "description": "Inbound gate check completed and access granted.",
+      "requiredFields": [
+        "gateCheckId",
+        "gateId",
+        "laneId",
+        "status",
+        "verifiedIdentifiers"
+      ],
+      "fields": {
+        "gateCheckId": {"type": "string", "description": "Gate check session identifier."},
+        "gateId": {"type": "string", "description": "Gate identifier."},
+        "laneId": {"type": "string", "description": "Lane identifier."},
+        "status": {"type": "string", "description": "verified, denied, manual_review."},
+        "verifiedIdentifiers": {"type": "object", "description": "Matched ANPR, RFID, and QR identifiers."},
+        "weightKg": {"type": "number", "description": "Captured inbound weight."},
+        "appointmentId": {"type": "string", "description": "Associated appointment."},
+        "containerId": {"type": "string", "description": "Container reference."},
+        "vehicleId": {"type": "string", "description": "Vehicle reference."},
+        "evidenceBundle": {"type": "array", "items": "string", "description": "Evidence artifact references."}
+      }
+    },
+    {
+      "eventType": "gate_check.out.completed",
+      "entityType": "GateCheck",
+      "description": "Outbound gate check completed and exit granted.",
+      "requiredFields": [
+        "gateCheckId",
+        "gateId",
+        "laneId",
+        "status",
+        "verifiedIdentifiers"
+      ],
+      "fields": {
+        "gateCheckId": {"type": "string", "description": "Gate check session identifier."},
+        "gateId": {"type": "string", "description": "Gate identifier."},
+        "laneId": {"type": "string", "description": "Lane identifier."},
+        "status": {"type": "string", "description": "verified, denied, manual_review."},
+        "verifiedIdentifiers": {"type": "object", "description": "Matched ANPR, RFID, and QR identifiers."},
+        "weightKg": {"type": "number", "description": "Captured outbound weight."},
+        "releaseReference": {"type": "string", "description": "Release or pickup reference."},
+        "sealStatus": {"type": "string", "description": "intact, tampered, unknown."},
+        "containerId": {"type": "string", "description": "Container reference."},
+        "vehicleId": {"type": "string", "description": "Vehicle reference."},
+        "evidenceBundle": {"type": "array", "items": "string", "description": "Evidence artifact references."}
+      }
+    },
+    {
+      "eventType": "gate_check.failed",
+      "entityType": "GateCheck",
+      "description": "Gate check failed or denied due to validation errors.",
+      "requiredFields": [
+        "gateCheckId",
+        "gateId",
+        "laneId",
+        "reasonCode"
+      ],
+      "fields": {
+        "gateCheckId": {"type": "string", "description": "Gate check session identifier."},
+        "gateId": {"type": "string", "description": "Gate identifier."},
+        "laneId": {"type": "string", "description": "Lane identifier."},
+        "reasonCode": {"type": "string", "description": "Mismatch, expired_appointment, weight_out_of_range."},
+        "details": {"type": "object", "description": "Structured failure details."},
+        "manualOverride": {"type": "boolean", "description": "Whether manual override was used."}
+      }
+    }
+  ]
+}

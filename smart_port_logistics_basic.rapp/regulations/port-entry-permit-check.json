@@ -1,3 +1,5 @@
 {
-  "rule": "Verify port entry permits"
+  "type": "regulation",
+  "name": "Port Entry Permit Check",
+  "description": "Verifies that carriers and drivers possess valid permits before entering port facilities."
 }

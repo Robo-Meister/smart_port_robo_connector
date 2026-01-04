@@ -1,5 +1,10 @@
 Port Booking Request
 
+Checklist:
+Criticality: %%criticality%%
+Applicable Cargo Types: %%cargo_types%%
+Blocking Rules: %%blocking_rules%%
+
 Port: %%port_name%%
 Vessel: %%vessel_name%%
 Arrival Date: %%arrival_date%%
