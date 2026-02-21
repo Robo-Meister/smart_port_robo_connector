@@ -1,4 +1,5 @@
 {
+  "type": "domain_event_schema",
   "description": "Canonical event envelope for port domain replay.",
   "requiredFields": [
     "eventId",

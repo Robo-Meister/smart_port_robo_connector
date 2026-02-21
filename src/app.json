@@ -1,13 +1,46 @@
 {
+  "type": "application",
   "id": "smart_port_logistics",
   "name": "Smart Port Logistics",
   "icon": "🚢",
   "color": "#1E90FF",
+  "routes": {
+    "scm.shipments": {
+      "path": "/scm/shipments",
+      "scope": "scm",
+      "entityType": "shipment",
+      "view": "list"
+    },
+    "scm.port_booking": {
+      "path": "/scm/port-booking",
+      "scope": "scm",
+      "entityType": "booking",
+      "view": "list"
+    },
+    "scm.risk_alerts": {
+      "path": "/scm/risk-alerts",
+      "scope": "scm",
+      "entityType": "risk_alert",
+      "view": "list"
+    },
+    "scm.warehouse_tracking": {
+      "path": "/scm/warehouse-tracking",
+      "scope": "scm",
+      "entityType": "warehouse_eta",
+      "view": "list"
+    },
+    "scm.supply_map": {
+      "path": "/scm/supply-map",
+      "scope": "scm",
+      "entityType": "supply_chain",
+      "view": "map"
+    }
+  },
   "menu": [
-    {"title": "Shipments", "icon": "📦", "path": "/scm/shipments"},
-    {"title": "Smart Booking", "icon": "📅", "path": "/scm/port-booking"},
-    {"title": "Risk Alerts", "icon": "⚠️", "path": "/scm/risk-alerts"},
-    {"title": "Warehouse ETAs", "icon": "🏭", "path": "/scm/warehouse-tracking"},
-    {"title": "Supply Chain Map", "icon": "🗺️", "path": "/scm/supply-map"}
+    {"title": "Shipments", "icon": "📦", "route": "scm.shipments"},
+    {"title": "Smart Booking", "icon": "📅", "route": "scm.port_booking"},
+    {"title": "Risk Alerts", "icon": "⚠️", "route": "scm.risk_alerts"},
+    {"title": "Warehouse ETAs", "icon": "🏭", "route": "scm.warehouse_tracking"},
+    {"title": "Supply Chain Map", "icon": "🗺️", "route": "scm.supply_map"}
   ]
 }

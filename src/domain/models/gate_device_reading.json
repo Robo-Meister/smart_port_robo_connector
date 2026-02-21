@@ -1,0 +1,32 @@
+{
+  "type": "domain_model",
+  "model": "GateDeviceReading",
+  "description": "Sensor or device reading captured during gate processing.",
+  "requiredFields": [
+    "id",
+    "deviceId",
+    "gateId",
+    "readingType",
+    "capturedAt",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique device reading identifier (UUID)."},
+    "deviceId": {"type": "string", "description": "Device or sensor identifier."},
+    "gateId": {"type": "string", "description": "Gate reference identifier."},
+    "gateCheckId": {"type": "string", "description": "Gate check reference if associated."},
+    "deviceType": {"type": "string", "description": "Device type (anpr, rfid, scale, camera)."},
+    "readingType": {"type": "string", "description": "Reading classification (plate, tag, weight, image)."},
+    "rawValue": {"type": "string", "description": "Raw device output prior to normalization."},
+    "normalizedValue": {"type": "string", "description": "Normalized value captured from the device."},
+    "confidence": {"type": "number", "description": "Confidence score for the reading."},
+    "capturedAt": {"type": "string", "format": "date-time"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "gate": {"model": "Gate", "field": "gateId"},
+    "gateCheck": {"model": "GateCheck", "field": "gateCheckId"}
+  }
+}

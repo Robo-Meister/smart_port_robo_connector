@@ -1,6 +1,31 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "actions": [
+    {
+      "action_id": "context.normalize",
+      "input_contract": [
+        "$.booking",
+        "$.constraints",
+        "$.documents",
+        "$.resources"
+      ],
+      "output_contract": [
+        "$.audit.normalized_at",
+        "$.audit.normalized_by",
+        "$.schema_version"
+      ],
+      "side_effects": [
+        "normalizes dates and validates required context fields"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 1
+      },
+      "security": {
+        "access": "port_ops",
+        "data_classification": "operational"
+      }
+    },
     {
       "action_id": "assemble_candidate_rebooking_plan",
       "input_contract": [
@@ -23,7 +48,31 @@
       }
     },
     {
-      "action_id": "assign_driver",
+      "action_id": "rebooking.slots.suggest",
+      "input_contract": [
+        "$.booking.alternatives",
+        "$.policy.rebooking_auto_suggest",
+        "$.booking.slot_chain_constraints",
+        "$.policy.selection_strategy",
+        "$.policy.max_suggestions"
+      ],
+      "output_contract": [
+        "$.booking.auto_suggested_alternatives"
+      ],
+      "side_effects": [
+        "filters and ranks rebooking alternatives"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 6
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "dispatch.driver.assign",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.slot_chain.slot_chain_id",
@@ -46,7 +95,7 @@
       }
     },
     {
-      "action_id": "capture_anpr_read",
+      "action_id": "gate.anpr.capture",
       "input_contract": [
         "$.booking.vehicle.license_plate",
         "$.booking.facility.gate_id"
@@ -67,7 +116,7 @@
       }
     },
     {
-      "action_id": "capture_destination_change_approval",
+      "action_id": "approval.destination_change.capture",
       "input_contract": [
         "$.booking.shipment_id",
         "$.booking.destination_change",
@@ -89,7 +138,7 @@
       }
     },
     {
-      "action_id": "confirm_new_slot",
+      "action_id": "slot.confirm",
       "input_contract": [
         "$.booking.slot_request_id",
         "$.booking.container.container_id",
@@ -111,7 +160,7 @@
       }
     },
     {
-      "action_id": "confirm_slot_chain",
+      "action_id": "slot.chain.confirm",
       "input_contract": [
         "$.booking.slot_chain.slot_chain_id",
         "$.booking.requested_window"
@@ -132,7 +181,7 @@
       }
     },
     {
-      "action_id": "detect_inbound_shipment",
+      "action_id": "shipment.inbound.detect",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.arrival_eta",
@@ -155,7 +204,7 @@
       }
     },
     {
-      "action_id": "emit_gate_event",
+      "action_id": "gate.event.emit",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.facility.gate_id"
@@ -176,7 +225,7 @@
       }
     },
     {
-      "action_id": "generate_what_if_preview",
+      "action_id": "rebooking.preview.generate",
       "input_contract": [
         "$.booking.shipment_id",
         "$.booking.rebooking_plan_id",
@@ -200,7 +249,7 @@
       }
     },
     {
-      "action_id": "handle_insufficient_rebooking_alternatives",
+      "action_id": "rebooking.alternatives.handle_insufficient",
       "input_contract": [
         "$.booking.ranked_alternatives",
         "$.policy.minimum_required"
@@ -221,7 +270,7 @@
       }
     },
     {
-      "action_id": "ingest_gate_arrival",
+      "action_id": "gate.arrival.ingest",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.facility.gate_id",
@@ -243,7 +292,7 @@
       }
     },
     {
-      "action_id": "ingest_gate_departure",
+      "action_id": "gate.departure.ingest",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.facility.gate_id",
@@ -265,7 +314,7 @@
       }
     },
     {
-      "action_id": "notify_stakeholders",
+      "action_id": "notifications.send",
       "input_contract": [
         "$.booking.shipment_id",
         "$.policy.notification_channels"
@@ -286,7 +335,7 @@
       }
     },
     {
-      "action_id": "open_gate_barrier",
+      "action_id": "gate.barrier.open",
       "input_contract": [
         "$.booking.facility.gate_id"
       ],
@@ -306,7 +355,7 @@
       }
     },
     {
-      "action_id": "rank_rebooking_alternatives",
+      "action_id": "rebooking.alternatives.rank",
       "input_contract": [
         "$.booking.alternatives",
         "$.policy.guardrail_policy",
@@ -331,7 +380,7 @@
       }
     },
     {
-      "action_id": "read_scale_weight",
+      "action_id": "gate.scale.read",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.facility.scale_id"
@@ -352,7 +401,7 @@
       }
     },
     {
-      "action_id": "record_gate_check_in",
+      "action_id": "gate.check_in.record",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.facility.gate_id"
@@ -373,7 +422,7 @@
       }
     },
     {
-      "action_id": "record_gate_check_out",
+      "action_id": "gate.check_out.record",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.facility.gate_id"
@@ -394,7 +443,7 @@
       }
     },
     {
-      "action_id": "reserve_resource_chain",
+      "action_id": "slot.chain.reserve",
       "input_contract": [
         "$.booking.slot_chain.slot_chain_id",
         "$.resources[]"
@@ -416,7 +465,7 @@
       }
     },
     {
-      "action_id": "route_for_operations_approval",
+      "action_id": "approval.operations.route",
       "input_contract": [
         "$.booking.rebooking_plan_id",
         "$.policy.approver_group"
@@ -437,7 +486,53 @@
       }
     },
     {
-      "action_id": "scan_qr_token",
+      "action_id": "approval.booking.request",
+      "input_contract": [
+        "$.booking.shipment_id",
+        "$.booking.requested_window",
+        "$.policy.approver_group"
+      ],
+      "output_contract": [
+        "$.booking.approval_request_id"
+      ],
+      "side_effects": [
+        "creates approval request"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 30
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "compliance.legal_review.route",
+      "input_contract": [
+        "$.booking.shipment_id",
+        "$.booking.route",
+        "$.compliance.restrictions[]",
+        "$.compliance.hold_reason"
+      ],
+      "output_contract": [
+        "$.compliance.legal_case_id",
+        "$.compliance.legal_review_status"
+      ],
+      "side_effects": [
+        "creates legal review case"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 120
+      },
+      "security": {
+        "access": "legal",
+        "data_classification": "restricted"
+      }
+    },
+    {
+      "action_id": "gate.qr.scan",
       "input_contract": [
         "$.booking.driver_id",
         "$.booking.facility.gate_id"
@@ -458,7 +553,7 @@
       }
     },
     {
-      "action_id": "scan_rfid_badge",
+      "action_id": "gate.rfid.scan",
       "input_contract": [
         "$.booking.driver_id",
         "$.booking.facility.gate_id"
@@ -479,7 +574,7 @@
       }
     },
     {
-      "action_id": "show_alternative_ports_or_slot_chains",
+      "action_id": "rebooking.alternatives.search",
       "input_contract": [
         "$.booking.shipment_id",
         "$.constraints",
@@ -502,7 +597,7 @@
       }
     },
     {
-      "action_id": "show_alternative_ports_or_slots",
+      "action_id": "slot.alternatives.search",
       "input_contract": [
         "$.booking.shipment_id",
         "$.constraints"
@@ -523,7 +618,7 @@
       }
     },
     {
-      "action_id": "suggest_slot_chain",
+      "action_id": "slot.chain.suggest",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.arrival_eta",
@@ -548,7 +643,7 @@
       }
     },
     {
-      "action_id": "suggest_time_slots",
+      "action_id": "slot.search",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.arrival_eta",
@@ -571,7 +666,7 @@
       }
     },
     {
-      "action_id": "update_etas",
+      "action_id": "eta.update",
       "input_contract": [
         "$.booking.shipment_id",
         "$.booking.new_eta"
@@ -593,7 +688,7 @@
       }
     },
     {
-      "action_id": "validate_documents",
+      "action_id": "documents.check",
       "input_contract": [
         "$.booking.shipment_id",
         "$.documents.required[]",
@@ -616,7 +711,7 @@
       }
     },
     {
-      "action_id": "validate_exit_authorization",
+      "action_id": "gate.exit_authorization.validate",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.driver_id"
@@ -637,7 +732,7 @@
       }
     },
     {
-      "action_id": "validate_gate_credentials",
+      "action_id": "gate.credentials.validate",
       "input_contract": [
         "$.booking.container.container_id",
         "$.booking.driver_id"
@@ -658,7 +753,7 @@
       }
     },
     {
-      "action_id": "validate_rebooking_guardrails",
+      "action_id": "rebooking.guardrails.validate",
       "input_contract": [
         "$.booking.rebooking_plan_id",
         "$.policy.guardrail_policy"
@@ -677,6 +772,515 @@
       "security": {
         "access": "compliance",
         "data_classification": "sensitive"
+      }
+    },
+    {
+      "action_id": "documents.ingest",
+      "input_contract": [
+        "$.documents.provided[]",
+        "$.documents.source"
+      ],
+      "output_contract": [
+        "$.documents.ingested_at",
+        "$.documents.ingest_status"
+      ],
+      "side_effects": [
+        "stores uploaded documents"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "compliance",
+        "data_classification": "restricted"
+      }
+    },
+    {
+      "action_id": "compliance.rules.evaluate",
+      "input_contract": [
+        "$.documents.provided[]",
+        "$.compliance.ruleset_version"
+      ],
+      "output_contract": [
+        "$.documents.issues",
+        "$.compliance.rule_outcome"
+      ],
+      "side_effects": [
+        "evaluates compliance rules"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 10
+      },
+      "security": {
+        "access": "compliance",
+        "data_classification": "restricted"
+      }
+    },
+    {
+      "action_id": "evidence.attach",
+      "input_contract": [
+        "$.documents.evidence[]",
+        "$.booking.reference_id"
+      ],
+      "output_contract": [
+        "$.audit.evidence_refs[]"
+      ],
+      "side_effects": [
+        "attaches evidence artifacts"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "compliance",
+        "data_classification": "restricted"
+      }
+    },
+    {
+      "action_id": "compliance.override.review",
+      "input_contract": [
+        "$.compliance.override_request",
+        "$.policy.override_roles"
+      ],
+      "output_contract": [
+        "$.compliance.override_status",
+        "$.compliance.override_expires_at"
+      ],
+      "side_effects": [
+        "creates override review case"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 120
+      },
+      "security": {
+        "access": "compliance",
+        "data_classification": "restricted"
+      }
+    },
+    {
+      "action_id": "documents.revalidate",
+      "input_contract": [
+        "$.documents.provided[]",
+        "$.documents.corrections"
+      ],
+      "output_contract": [
+        "$.documents.status",
+        "$.documents.issues"
+      ],
+      "side_effects": [
+        "revalidates document set"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 10
+      },
+      "security": {
+        "access": "compliance",
+        "data_classification": "restricted"
+      }
+    },
+    {
+      "action_id": "status.update",
+      "input_contract": [
+        "$.booking.reference_id",
+        "$.booking.status"
+      ],
+      "output_contract": [
+        "$.booking.status_updated_at"
+      ],
+      "side_effects": [
+        "updates workflow status"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 2
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "remediation.recommend",
+      "input_contract": [
+        "$.documents.issues"
+      ],
+      "output_contract": [
+        "$.documents.recommendations[]"
+      ],
+      "side_effects": [
+        "generates remediation guidance"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 8
+      },
+      "security": {
+        "access": "compliance",
+        "data_classification": "restricted"
+      }
+    },
+    {
+      "action_id": "delay.detect",
+      "input_contract": [
+        "$.tracking.events[]",
+        "$.policy.delay_thresholds"
+      ],
+      "output_contract": [
+        "$.alerts.delay_candidates[]"
+      ],
+      "side_effects": [
+        "detects delay candidates"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "delay.classify",
+      "input_contract": [
+        "$.alerts.delay_candidates[]",
+        "$.policy.delay_severity"
+      ],
+      "output_contract": [
+        "$.alerts.delay_classifications[]"
+      ],
+      "side_effects": [
+        "classifies delay severity"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "alert.deduplicate",
+      "input_contract": [
+        "$.alerts.delay_classifications[]",
+        "$.policy.alert_dedupe"
+      ],
+      "output_contract": [
+        "$.alerts.deduped[]"
+      ],
+      "side_effects": [
+        "applies suppression rules"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 3
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "alert.route",
+      "input_contract": [
+        "$.alerts.deduped[]",
+        "$.policy.notification_matrix"
+      ],
+      "output_contract": [
+        "$.alerts.routed[]"
+      ],
+      "side_effects": [
+        "routes alerts"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 2
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "alert.escalate.operations",
+      "input_contract": [
+        "$.alerts.routed[]",
+        "$.policy.escalation_windows"
+      ],
+      "output_contract": [
+        "$.alerts.escalations[]"
+      ],
+      "side_effects": [
+        "escalates to operations"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 15
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "alert.escalate.compliance",
+      "input_contract": [
+        "$.alerts.routed[]",
+        "$.policy.escalation_windows"
+      ],
+      "output_contract": [
+        "$.alerts.escalations[]"
+      ],
+      "side_effects": [
+        "escalates to compliance"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 30
+      },
+      "security": {
+        "access": "compliance",
+        "data_classification": "restricted"
+      }
+    },
+    {
+      "action_id": "alert.escalate.customer_success",
+      "input_contract": [
+        "$.alerts.routed[]",
+        "$.policy.escalation_windows"
+      ],
+      "output_contract": [
+        "$.alerts.escalations[]"
+      ],
+      "side_effects": [
+        "escalates to customer success"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 45
+      },
+      "security": {
+        "access": "customer_success",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "routing.replan",
+      "input_contract": [
+        "$.booking.shipment_id",
+        "$.constraints"
+      ],
+      "output_contract": [
+        "$.booking.reroute_plan_id"
+      ],
+      "side_effects": [
+        "generates reroute plan"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 20
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "audit.log_resolution",
+      "input_contract": [
+        "$.alerts.escalations[]",
+        "$.resolution"
+      ],
+      "output_contract": [
+        "$.audit.escalation_log[]"
+      ],
+      "side_effects": [
+        "writes escalation log"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 2
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "tracking.events.ingest",
+      "input_contract": [
+        "$.tracking.raw_events[]"
+      ],
+      "output_contract": [
+        "$.tracking.events[]"
+      ],
+      "side_effects": [
+        "normalizes tracking events"
+      ],
+      "idempotency_key": "$.tracking.tracking_id",
+      "sla": {
+        "response_time_minutes": 2
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "eta.calculate_state",
+      "input_contract": [
+        "$.tracking.events[]",
+        "$.policy.eta_tolerance_minutes"
+      ],
+      "output_contract": [
+        "$.tracking.eta_state"
+      ],
+      "side_effects": [
+        "computes ETA state"
+      ],
+      "idempotency_key": "$.tracking.tracking_id",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "delay.reason.classify",
+      "input_contract": [
+        "$.tracking.events[]",
+        "$.policy.delay_reason_matrix"
+      ],
+      "output_contract": [
+        "$.alerts.delay_reasons[]"
+      ],
+      "side_effects": [
+        "classifies delay reasons"
+      ],
+      "idempotency_key": "$.tracking.tracking_id",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "tracking.driver.status",
+      "input_contract": [
+        "$.tracking.driver_id",
+        "$.tracking.device_refs"
+      ],
+      "output_contract": [
+        "$.tracking.driver_status"
+      ],
+      "side_effects": [
+        "fetches driver status"
+      ],
+      "idempotency_key": "$.tracking.tracking_id",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "routing.handle",
+      "input_contract": [
+        "$.booking.shipment_id",
+        "$.routing.options"
+      ],
+      "output_contract": [
+        "$.routing.updated_plan"
+      ],
+      "side_effects": [
+        "updates routing plan"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 15
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "alert.late_warning",
+      "input_contract": [
+        "$.tracking.eta_state",
+        "$.policy.no_show_grace_minutes"
+      ],
+      "output_contract": [
+        "$.alerts.late_warnings[]"
+      ],
+      "side_effects": [
+        "issues late arrival warnings"
+      ],
+      "idempotency_key": "$.tracking.tracking_id",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "operations",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "slot.hold",
+      "input_contract": [
+        "$.booking.slot_candidate_id",
+        "$.booking.requested_window",
+        "$.policy.hold_ttl_minutes"
+      ],
+      "output_contract": [
+        "$.booking.hold_id",
+        "$.booking.hold_expires_at"
+      ],
+      "side_effects": [
+        "creates temporary slot hold"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 5
+      },
+      "security": {
+        "access": "scheduling",
+        "data_classification": "operational"
+      }
+    },
+    {
+      "action_id": "slot.reschedule",
+      "input_contract": [
+        "$.booking.slot_id",
+        "$.booking.new_requested_window"
+      ],
+      "output_contract": [
+        "$.booking.reschedule_id",
+        "$.booking.updated_slot_id"
+      ],
+      "side_effects": [
+        "reschedules slot"
+      ],
+      "idempotency_key": "$.booking.reference_id",
+      "sla": {
+        "response_time_minutes": 15
+      },
+      "security": {
+        "access": "scheduling",
+        "data_classification": "operational"
       }
     }
   ]

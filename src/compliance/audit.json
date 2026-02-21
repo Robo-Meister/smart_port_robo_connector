@@ -1,4 +1,5 @@
 {
+  "type": "compliance_audit",
   "namespace": "compliance",
   "description": "Audit logging schema, retention policies, and sensitive document access logging.",
   "models": {

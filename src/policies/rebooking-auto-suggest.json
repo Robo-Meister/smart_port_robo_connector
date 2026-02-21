@@ -18,7 +18,7 @@
       },
       "destination_change_approval": {
         "required": true,
-        "action_on_missing": "route_for_operations_approval"
+        "action_on_missing": "approval.operations.route"
       }
     }
   },

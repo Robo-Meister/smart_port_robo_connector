@@ -1,4 +1,5 @@
 {
+  "type": "security_tenancy",
   "namespace": "security",
   "description": "Tenant hierarchy, document sharing policies, and shared access auditing.",
   "models": {

@@ -1,4 +1,5 @@
 {
+  "type": "domain_model",
   "model": "Booking",
   "description": "Unified reservation of vessel capacity and terminal resources.",
   "requiredFields": [
@@ -8,6 +9,7 @@
     "vesselId",
     "voyageNumber",
     "slotAppointmentId",
+    "slotChainId",
     "shipperPartyId",
     "createdAt",
     "updatedAt"
@@ -22,6 +24,7 @@
     "vesselId": {"type": "string", "description": "Assigned vessel identifier."},
     "voyageNumber": {"type": "string", "description": "Vessel voyage reference."},
     "slotAppointmentId": {"type": "string", "description": "Slot appointment linked to the booking."},
+    "slotChainId": {"type": "string", "description": "Slot chain representing sequential port stages."},
     "shipperPartyId": {"type": "string", "description": "Party requesting the booking."},
     "cargoDescription": {"type": "string", "description": "Summary of cargo."},
     "containerIds": {"type": "array", "items": "string", "description": "Containers reserved under this booking."},
@@ -41,6 +44,7 @@
   "relationships": {
     "vessel": {"model": "Vessel", "field": "vesselId"},
     "slotAppointment": {"model": "SlotAppointment", "field": "slotAppointmentId"},
+    "slotChain": {"model": "SlotChain", "field": "slotChainId"},
     "shipper": {"model": "Party", "field": "shipperPartyId"},
     "containers": {"model": "Container", "field": "containerIds"},
     "documents": {"model": "Document", "field": "documents"},

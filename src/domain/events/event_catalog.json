@@ -1,4 +1,5 @@
 {
+  "type": "domain_event_catalog",
   "description": "Event types emitted for port domain aggregates.",
   "eventTypes": [
     {

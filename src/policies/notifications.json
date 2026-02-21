@@ -134,6 +134,57 @@
       "recipients": ["shipper_contact", "carrier_dispatch", "terminal_ops", "billing"]
     }
   ],
+  "event_triggers": [
+    {
+      "name": "Auto-rebook suggestion",
+      "event_type": "auto_rebook_suggestion",
+      "channels": ["email", "sms", "in_app"],
+      "template": "auto_rebook_suggestion_notice",
+      "recipients": ["shipper_contact", "carrier_dispatch", "terminal_ops"]
+    }
+  ],
+  "scheduled_triggers": [
+    {
+      "name": "T-24 booking reminder",
+      "relative_to": "slot_start",
+      "offset_hours": 24,
+      "direction": "before",
+      "event_type": "booking_reminder",
+      "channels": ["email", "sms", "in_app"],
+      "template": "booking_reminder_t24",
+      "recipients": ["shipper_contact", "carrier_dispatch"]
+    },
+    {
+      "name": "T-3h booking reminder",
+      "relative_to": "slot_start",
+      "offset_hours": 3,
+      "direction": "before",
+      "event_type": "booking_reminder",
+      "channels": ["sms", "in_app"],
+      "template": "booking_reminder_t3h",
+      "recipients": ["shipper_contact", "carrier_dispatch"]
+    },
+    {
+      "name": "Go-to-gate window open notice",
+      "relative_to": "go_to_gate_start",
+      "offset_minutes": 0,
+      "direction": "at",
+      "event_type": "go_to_gate_window",
+      "channels": ["sms", "in_app"],
+      "template": "go_to_gate_window_notice",
+      "recipients": ["carrier_dispatch", "terminal_ops"]
+    },
+    {
+      "name": "Missing documents reminder",
+      "relative_to": "document_due_at",
+      "offset_hours": 24,
+      "direction": "before",
+      "event_type": "missing_documents",
+      "channels": ["email", "sms", "in_app"],
+      "template": "missing_documents_reminder",
+      "recipients": ["shipper_contact"]
+    }
+  ],
   "templates": {
     "booking_hold_notice": {
       "subject": "Booking {{booking_number}} placed on hold",
@@ -141,7 +192,7 @@
     },
     "booking_confirmed_notice": {
       "subject": "Booking {{booking_number}} confirmed",
-      "body": "Your booking is confirmed for {{slot_start}}–{{slot_end}} at {{terminal_name}}."
+      "body": "Your booking is confirmed for {{slot_start}}–{{slot_end}} at {{terminal_name}} (Gate: {{gate_name}}). Slot chain: {{slot_chain_summary}}. Cutoff: {{cutoff_time}}. Entry pass QR: {{entry_pass_qr_url}}."
     },
     "booking_cancelled_notice": {
       "subject": "Booking {{booking_number}} cancelled",
@@ -150,6 +201,26 @@
     "booking_no_show_notice": {
       "subject": "Booking {{booking_number}} marked no-show",
       "body": "Booking {{booking_number}} was marked as no-show at {{no_show_at}}. Contact operations for follow-up."
+    },
+    "booking_reminder_t24": {
+      "subject": "Reminder: Booking {{booking_number}} in 24 hours",
+      "body": "Your booking at {{terminal_name}} is scheduled for {{slot_start}}–{{slot_end}} tomorrow. Go-to-gate window: {{go_to_gate_start}}–{{go_to_gate_end}}. Missing documents: {{missing_documents}}. Cutoff: {{cutoff_time}}. Entry pass QR: {{entry_pass_qr_url}}."
+    },
+    "booking_reminder_t3h": {
+      "subject": "Reminder: Booking {{booking_number}} in 3 hours",
+      "body": "Your booking at {{terminal_name}} starts at {{slot_start}}. Go-to-gate window: {{go_to_gate_start}}–{{go_to_gate_end}}. Missing documents: {{missing_documents}}. Entry pass QR: {{entry_pass_qr_url}}."
+    },
+    "go_to_gate_window_notice": {
+      "subject": "Go-to-gate window open for booking {{booking_number}}",
+      "body": "The go-to-gate window is open from {{go_to_gate_start}} to {{go_to_gate_end}} for {{terminal_name}}. Proceed to gate when ready."
+    },
+    "missing_documents_reminder": {
+      "subject": "Missing documents for booking {{booking_number}}",
+      "body": "We are missing {{missing_documents}} for booking {{booking_number}}. Please upload by {{document_due_at}}. If not received by {{cancellation_deadline}}, the booking may be cancelled."
+    },
+    "auto_rebook_suggestion_notice": {
+      "subject": "Action needed: alternate slots for booking {{booking_number}}",
+      "body": "We identified disruption risk for booking {{booking_number}}. Suggested alternatives: {{rebook_option_1}}, {{rebook_option_2}}, {{rebook_option_3}}. Review and approve at {{rebook_approval_url}} before {{rebook_decision_deadline}}."
     }
   },
   "recipients": {

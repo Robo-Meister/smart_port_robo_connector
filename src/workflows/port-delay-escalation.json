@@ -2,14 +2,41 @@
   "type": "workflow",
   "name": "Port Delay Escalation",
   "steps": [
-    {"name": "Detect idle containers or blocked entries"},
-    {"name": "Classify delay severity and match notification policy"},
-    {"name": "Apply deduplication and suppression rules"},
-    {"name": "Route alert to dispatcher"},
-    {"name": "Escalate to operations if unacknowledged after 15 minutes"},
-    {"name": "Escalate to compliance if unacknowledged after 30 minutes"},
-    {"name": "Escalate to customer success if unacknowledged after 45 minutes"},
-    {"name": "Trigger re-routing logic"},
-    {"name": "Log escalation outcome and resolution"}
+    {
+      "name": "Detect idle containers or blocked entries",
+      "action_id": "delay.detect"
+    },
+    {
+      "name": "Classify delay severity and match notification policy",
+      "action_id": "delay.classify"
+    },
+    {
+      "name": "Apply deduplication and suppression rules",
+      "action_id": "alert.deduplicate"
+    },
+    {
+      "name": "Route alert to dispatcher",
+      "action_id": "alert.route"
+    },
+    {
+      "name": "Escalate to operations if unacknowledged after 15 minutes",
+      "action_id": "alert.escalate.operations"
+    },
+    {
+      "name": "Escalate to compliance if unacknowledged after 30 minutes",
+      "action_id": "alert.escalate.compliance"
+    },
+    {
+      "name": "Escalate to customer success if unacknowledged after 45 minutes",
+      "action_id": "alert.escalate.customer_success"
+    },
+    {
+      "name": "Trigger re-routing logic",
+      "action_id": "routing.replan"
+    },
+    {
+      "name": "Log escalation outcome and resolution",
+      "action_id": "audit.log_resolution"
+    }
   ]
 }

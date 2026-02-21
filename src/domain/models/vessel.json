@@ -1,4 +1,5 @@
 {
+  "type": "domain_model",
   "model": "Vessel",
   "description": "Ocean-going vessel used for port calls and cargo operations.",
   "requiredFields": [

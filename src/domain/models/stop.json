@@ -1,4 +1,5 @@
 {
+  "type": "domain_model",
   "model": "Stop",
   "description": "Discrete location/time window in a shipment or move plan.",
   "requiredFields": [

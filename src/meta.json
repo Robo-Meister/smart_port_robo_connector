@@ -1,5 +1,6 @@
 {
- "id": "smart_port_logistics",
+  "channel": "apps",
+  "id": "smart_port_logistics",
   "key": "smart_port_logistics",
   "name": "Smart Port Logistics",
   "type": "app",
@@ -10,12 +11,13 @@
     "/static/apps/smart-port-logistics/screenshot-02.png"
   ],
   "tags": ["logistics", "port", "supply-chain", "booking", "compliance"],
-  "version": "1.0.1",
+  "version": "1.0.0",
   "entry": "app.json",
   "workflows": [
     "workflows/smart-slot-booking.json",
     "workflows/shipment-rebooking.json",
     "workflows/customs-doc-validation.json",
+    "workflows/dispatch-preflight-validation.json",
     "workflows/port-delay-escalation.json",
     "workflows/last-mile-delivery-tracking.json",
     "workflows/ra-gate-check-in.json",
@@ -29,6 +31,7 @@
   ],
   "regulations": [
     "regulations/customs-entry-validation.json",
+    "regulations/embargo-routing-review.json",
     "regulations/hazardous-materials-declaration.json",
     "regulations/port-entry-permit-check.json",
     "regulations/dock-scheduling-rule.json"
@@ -57,6 +60,12 @@
 
   "pricing_levers": ["runtime", "assurance"],
   "badges": ["verified_integration", "security_reviewed", "certified_pack"],
+  "modules_required": [
+    "BPM",
+    "Documents",
+    "Communication",
+    "ERM"
+  ],
 
   "install_steps": [
     "Install the pack",

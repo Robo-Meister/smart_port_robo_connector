@@ -1,4 +1,5 @@
 {
+  "type": "lifecycle_state",
   "vessel": {
     "states": ["scheduled", "delayed", "arrived", "berthed", "discharged"],
     "transitions": {

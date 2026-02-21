@@ -1,0 +1,28 @@
+{
+  "type": "domain_model",
+  "model": "GateChecklist",
+  "description": "Validation checklist required to clear a gate visit.",
+  "requiredFields": [
+    "id",
+    "gateVisitId",
+    "checklistType",
+    "status",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Checklist identifier."},
+    "gateVisitId": {"type": "string", "description": "Gate visit reference."},
+    "checklistType": {"type": "string", "description": "document, safety, quality, security."},
+    "status": {"type": "string", "description": "pending, in_progress, passed, failed."},
+    "requiredChecks": {"type": "array", "items": "string", "description": "List of required check items."},
+    "completedChecks": {"type": "array", "items": "string", "description": "List of completed check items."},
+    "verifier": {"type": "object", "description": "Operator or system validating the checklist."},
+    "evidence": {"type": "array", "items": "string", "description": "Evidence references for audit."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "gateVisit": {"model": "GateVisit", "field": "gateVisitId"}
+  }
+}

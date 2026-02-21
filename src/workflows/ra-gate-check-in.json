@@ -11,7 +11,7 @@
   ],
   "steps": [
     {
-      "action_id": "ingest_gate_arrival",
+      "action_id": "gate.arrival.ingest",
       "inputs": {
         "gate_id": "{gate_id}",
         "lane_id": "{lane_id}",
@@ -21,7 +21,7 @@
       "actor_type": "gate_ops"
     },
     {
-      "action_id": "capture_anpr_read",
+      "action_id": "gate.anpr.capture",
       "inputs": {
         "camera_id": "{camera_id}",
         "vehicle_plate": "{vehicle_plate}",
@@ -30,7 +30,7 @@
       "actor_type": "gate_ops"
     },
     {
-      "action_id": "scan_rfid_badge",
+      "action_id": "gate.rfid.scan",
       "inputs": {
         "reader_id": "{reader_id}",
         "rfid_tag": "{rfid_tag}",
@@ -39,7 +39,7 @@
       "actor_type": "gate_ops"
     },
     {
-      "action_id": "scan_qr_token",
+      "action_id": "gate.qr.scan",
       "inputs": {
         "scanner_id": "{scanner_id}",
         "qr_payload": "{qr_payload}",
@@ -48,7 +48,7 @@
       "actor_type": "gate_ops"
     },
     {
-      "action_id": "read_scale_weight",
+      "action_id": "gate.scale.read",
       "inputs": {
         "scale_id": "{scale_id}",
         "weight_kg": "{weight_kg}",
@@ -58,7 +58,7 @@
       "actor_type": "gate_ops"
     },
     {
-      "action_id": "validate_gate_credentials",
+      "action_id": "gate.credentials.validate",
       "inputs": {
         "appointment_id": "{appointment_id}",
         "vehicle_plate": "{vehicle_plate}",
@@ -70,7 +70,7 @@
       "actor_type": "security"
     },
     {
-      "action_id": "record_gate_check_in",
+      "action_id": "gate.check_in.record",
       "inputs": {
         "gate_check_id": "{gate_check_id}",
         "status": "verified",
@@ -80,7 +80,7 @@
       "actor_type": "gate_ops"
     },
     {
-      "action_id": "open_gate_barrier",
+      "action_id": "gate.barrier.open",
       "inputs": {
         "barrier_id": "{barrier_id}",
         "gate_check_id": "{gate_check_id}",
@@ -89,7 +89,7 @@
       "actor_type": "gate_ops"
     },
     {
-      "action_id": "emit_gate_event",
+      "action_id": "gate.event.emit",
       "inputs": {
         "event_type": "gate_check.in.completed",
         "gate_check_id": "{gate_check_id}",
@@ -145,9 +145,9 @@
       "scope": "gate_check_id",
       "lock_key": "gate_check:{gate_check_id}",
       "held_during_steps": [
-        "validate_gate_credentials",
-        "record_gate_check_in",
-        "open_gate_barrier"
+        "gate.credentials.validate",
+        "gate.check_in.record",
+        "gate.barrier.open"
       ],
       "release_conditions": [
         "gate_check_completed",

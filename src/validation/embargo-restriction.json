@@ -1,0 +1,16 @@
+{
+  "type": "validation_rule",
+  "rule_id": "ROUTE.EMBARGO_RESTRICTED",
+  "severity": "critical",
+  "status": "failed",
+  "message": "Route intersects embargoed or restricted locations; legal review required before dispatch.",
+  "restricted_segments": [
+    {
+      "region_code": "IR",
+      "restriction": "OFAC embargo",
+      "segment": "Transit leg 2"
+    }
+  ],
+  "required_action": "legal_review",
+  "timestamp": "2024-09-15T09:18:12Z"
+}

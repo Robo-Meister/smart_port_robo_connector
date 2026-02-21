@@ -4,8 +4,8 @@
     {
       "actor_type": "compliance",
       "supports_actions": [
-        "validate_documents",
-        "validate_rebooking_guardrails"
+        "documents.check",
+        "rebooking.guardrails.validate"
       ],
       "scopes": [
         "customs",
@@ -18,8 +18,8 @@
     {
       "actor_type": "customer_success",
       "supports_actions": [
-        "capture_destination_change_approval",
-        "notify_stakeholders"
+        "approval.destination_change.capture",
+        "notifications.send"
       ],
       "scopes": [
         "client",
@@ -31,8 +31,8 @@
     {
       "actor_type": "dispatch",
       "supports_actions": [
-        "assign_driver",
-        "notify_stakeholders"
+        "dispatch.driver.assign",
+        "notifications.send"
       ],
       "scopes": [
         "carrier",
@@ -44,16 +44,16 @@
     {
       "actor_type": "gate_ops",
       "supports_actions": [
-        "capture_anpr_read",
-        "emit_gate_event",
-        "ingest_gate_arrival",
-        "ingest_gate_departure",
-        "open_gate_barrier",
-        "read_scale_weight",
-        "record_gate_check_in",
-        "record_gate_check_out",
-        "scan_qr_token",
-        "scan_rfid_badge"
+        "gate.anpr.capture",
+        "gate.event.emit",
+        "gate.arrival.ingest",
+        "gate.departure.ingest",
+        "gate.barrier.open",
+        "gate.scale.read",
+        "gate.check_in.record",
+        "gate.check_out.record",
+        "gate.qr.scan",
+        "gate.rfid.scan"
       ],
       "scopes": [
         "gate",
@@ -63,16 +63,30 @@
       "quality": "standard"
     },
     {
+      "actor_type": "legal",
+      "supports_actions": [
+        "compliance.legal_review.route"
+      ],
+      "scopes": [
+        "embargo",
+        "restricted_route",
+        "export_control"
+      ],
+      "availability": "business_hours",
+      "quality": "high"
+    },
+    {
       "actor_type": "operations",
       "supports_actions": [
-        "show_alternative_ports_or_slots",
-        "show_alternative_ports_or_slot_chains",
-        "rank_rebooking_alternatives",
-        "assemble_candidate_rebooking_plan",
-        "handle_insufficient_rebooking_alternatives",
-        "generate_what_if_preview",
-        "route_for_operations_approval",
-        "update_etas"
+        "slot.alternatives.search",
+        "rebooking.alternatives.search",
+        "rebooking.slots.suggest",
+        "rebooking.alternatives.rank",
+        "rebooking.plan.assemble",
+        "rebooking.alternatives.handle_insufficient",
+        "rebooking.preview.generate",
+        "approval.operations.route",
+        "eta.update"
       ],
       "scopes": [
         "rebooking",
@@ -85,12 +99,12 @@
     {
       "actor_type": "port_ops",
       "supports_actions": [
-        "detect_inbound_shipment",
-        "suggest_time_slots",
-        "suggest_slot_chain",
-        "confirm_new_slot",
-        "confirm_slot_chain",
-        "reserve_resource_chain"
+        "shipment.inbound.detect",
+        "slot.search",
+        "slot.chain.suggest",
+        "slot.confirm",
+        "slot.chain.confirm",
+        "slot.chain.reserve"
       ],
       "scopes": [
         "terminal",
@@ -103,8 +117,8 @@
     {
       "actor_type": "security",
       "supports_actions": [
-        "validate_exit_authorization",
-        "validate_gate_credentials"
+        "gate.exit_authorization.validate",
+        "gate.credentials.validate"
       ],
       "scopes": [
         "access_control",

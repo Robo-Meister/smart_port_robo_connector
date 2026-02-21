@@ -1,0 +1,43 @@
+{
+  "type": "domain_model",
+  "model": "SlotChain",
+  "description": "Atomic chain of sequential slot appointments across port stages (gate → yard → crane → berth).",
+  "requiredFields": [
+    "id",
+    "status",
+    "stages",
+    "bookingId",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique slot chain identifier (UUID)."},
+    "status": {
+      "type": "string",
+      "description": "Slot chain status (planned, partially-confirmed, confirmed, in-progress, completed, cancelled, failed)."
+    },
+    "bookingId": {"type": "string", "description": "Booking that owns the slot chain."},
+    "stages": {
+      "type": "array",
+      "description": "Ordered list of stage definitions for the chain.",
+      "items": {
+        "type": "object",
+        "fields": {
+          "stageId": {"type": "string", "description": "Stage identifier (gate, yard, crane, berth)."},
+          "slotAppointmentId": {"type": "string", "description": "Linked slot appointment identifier."},
+          "resourceId": {"type": "string", "description": "Resource assigned to this stage (gate/yard/crane)."},
+          "plannedStartAt": {"type": "string", "format": "date-time"},
+          "plannedEndAt": {"type": "string", "format": "date-time"},
+          "status": {"type": "string", "description": "Stage status (planned, held, confirmed, completed, failed)."}
+        }
+      }
+    },
+    "constraints": {"type": "object", "description": "Constraint bundle applied when matching the chain."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "booking": {"model": "Booking", "field": "bookingId"},
+    "slotAppointments": {"model": "SlotAppointment", "field": "stages[].slotAppointmentId"}
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "domain_model",
+  "model": "GateHold",
+  "description": "Blocking condition that prevents a gate visit from clearing.",
+  "requiredFields": [
+    "id",
+    "gateVisitId",
+    "holdType",
+    "status",
+    "reason",
+    "imposedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Hold identifier."},
+    "gateVisitId": {"type": "string", "description": "Gate visit reference."},
+    "holdType": {"type": "string", "description": "document, safety, customs, quality, security."},
+    "status": {"type": "string", "description": "active, released."},
+    "reason": {"type": "string", "description": "Short explanation for the hold."},
+    "owner": {"type": "string", "description": "Responsible team or authority."},
+    "imposedAt": {"type": "string", "format": "date-time"},
+    "releasedAt": {"type": "string", "format": "date-time"},
+    "releaseNote": {"type": "string", "description": "How the hold was cleared."}
+  },
+  "relationships": {
+    "gateVisit": {"model": "GateVisit", "field": "gateVisitId"}
+  }
+}
