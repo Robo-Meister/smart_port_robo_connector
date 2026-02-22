@@ -1,4 +1,5 @@
 {
+  "type": "domain_model",
   "model": "Party",
   "description": "Organization or individual participating in port workflows.",
   "requiredFields": [

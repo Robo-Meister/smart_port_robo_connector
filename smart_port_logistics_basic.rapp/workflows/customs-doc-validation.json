@@ -4,31 +4,30 @@
   "steps": [
     {
       "name": "Validate uploaded customs and clearance files",
-      "action": "ingest"
+      "action_id": "documents.ingest"
     },
     {
       "name": "Evaluate regulations ruleset",
-      "action": "rule_evaluation",
       "ruleset_version": "1.3",
       "outputs": [
         "validation/missing-fields.json",
         "validation/expiry.json",
         "validation/hazmat-mismatch.json"
-      ]
+      ],
+      "action_id": "compliance.rules.evaluate"
     },
     {
       "name": "Attach evidence artifacts",
-      "action": "evidence_attachment",
       "evidence_types": [
         "customs_declaration",
         "clearance_certificate",
         "carrier_manifest",
         "inspection_photos"
-      ]
+      ],
+      "action_id": "evidence.attach"
     },
     {
       "name": "Handle override request",
-      "action": "override_review",
       "override_policy": {
         "authorized_roles": [
           "Compliance Officer",
@@ -37,20 +36,21 @@
         "duration_hours": 24,
         "reason_required": true,
         "log_destination": "audit/validation-trace"
-      }
+      },
+      "action_id": "compliance.override.review"
     },
     {
       "name": "Re-validate after corrections",
-      "action": "revalidation",
-      "trigger": "evidence_or_document_updates"
+      "trigger": "evidence_or_document_updates",
+      "action_id": "documents.revalidate"
     },
     {
       "name": "Mark missing or invalid",
-      "action": "status_update"
+      "action_id": "status.update"
     },
     {
       "name": "Suggest corrective action",
-      "action": "recommendation"
+      "action_id": "remediation.recommend"
     }
   ]
 }

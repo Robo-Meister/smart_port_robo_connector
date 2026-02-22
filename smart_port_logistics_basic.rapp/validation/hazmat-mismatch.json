@@ -1,4 +1,5 @@
 {
+  "type": "validation_rule",
   "rule_id": "HAZMAT.DECLARATION_MISMATCH",
   "severity": "critical",
   "status": "failed",

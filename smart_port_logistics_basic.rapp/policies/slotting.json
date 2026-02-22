@@ -28,6 +28,38 @@
       "invoice_description": "Priority access fee"
     }
   },
+  "dynamic_pricing": {
+    "enabled": true,
+    "fee_code": "OCCUPANCY_SURCHARGE",
+    "currency": "USD",
+    "metric": "smart_booking_resource_utilization_percent",
+    "applies_to": ["gate", "yard", "crane", "berth"],
+    "tiers": [
+      {
+        "occupancy_gte": 75,
+        "surcharge": 50,
+        "label": "High utilization"
+      },
+      {
+        "occupancy_gte": 85,
+        "surcharge": 100,
+        "label": "Peak utilization"
+      },
+      {
+        "occupancy_gte": 95,
+        "surcharge": 150,
+        "label": "Critical utilization"
+      }
+    ],
+    "billing": {
+      "bill_to": "carrier",
+      "invoice_description": "Dynamic occupancy surcharge"
+    },
+    "audit_fields": {
+      "occupancy_percent": "number",
+      "applied_tier": "string"
+    }
+  },
   "no_show_fee": {
     "enabled": true,
     "fee_code": "NO_SHOW",

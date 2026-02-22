@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "required_paths": [
     "$.booking.reference_id",
     "$.booking.requested_window.start",
@@ -11,7 +11,13 @@
     "$.documents.required[].cargo_types",
     "$.documents.required_by_cargo",
     "$.documents.blocking_rules[]",
-    "$.resources[]"
+    "$.resources[]",
+    "$.booking.facility",
+    "$.constraints",
+    "$.documents",
+    "$.policy.hold_ttl_minutes",
+    "$.policy.eta_tolerance_minutes",
+    "$.policy.no_show_grace_minutes"
   ],
   "sections": {
     "booking": {
@@ -89,8 +95,10 @@
     "policy": {
       "description": "Policy defaults and SLA parameters applied to the booking.",
       "example_fields": [
+        "approver_group",
         "hold_ttl_minutes",
-        "eta_tolerance_minutes"
+        "eta_tolerance_minutes",
+        "no_show_grace_minutes"
       ]
     }
   }
