@@ -1,0 +1,89 @@
+{
+  "type": "workflow",
+  "name": "Dispatch Preflight Compliance",
+  "steps": [
+    {
+      "action_id": "documents.check",
+      "inputs": {
+        "booking.shipment_id": "{booking.shipment_id}",
+        "documents.required": [
+          "customs_declaration",
+          "carrier_manifest",
+          "clearance_certificate"
+        ],
+        "documents.blocking_rules": [
+          "missing_documents",
+          "expired_documents"
+        ]
+      },
+      "actor_type": "compliance"
+    },
+    {
+      "name": "Evaluate embargo and restricted routing",
+      "action": "rule_evaluation",
+      "ruleset_version": "1.0",
+      "outputs": [
+        "validation/missing-documents.json",
+        "validation/embargo-restriction.json"
+      ]
+    },
+    {
+      "name": "Route embargoed shipments for legal review",
+      "action_id": "compliance.legal_review.route",
+      "condition": {
+        "artifact": "validation/embargo-restriction.json",
+        "status": "failed"
+      },
+      "inputs": {
+        "booking.shipment_id": "{booking.shipment_id}",
+        "booking.route": "{booking.route}",
+        "compliance.restrictions": "{validation/embargo-restriction.json.restricted_segments}",
+        "compliance.hold_reason": "{validation/embargo-restriction.json.message}"
+      },
+      "actor_type": "legal"
+    },
+    {
+      "name": "Mark preflight status",
+      "action": "status_update"
+    }
+  ],
+  "partial_failure_scenarios": [
+    {
+      "scenario": "Missing customs declaration or clearance certificate",
+      "signals": [
+        "documents_missing",
+        "customs_declaration_missing"
+      ],
+      "impact": "Dispatch blocked until required documents are uploaded",
+      "resolution_path": "document_request_hold"
+    },
+    {
+      "scenario": "Route intersects embargoed or restricted location",
+      "signals": [
+        "embargo_route_detected"
+      ],
+      "impact": "Shipment placed on legal hold for review",
+      "resolution_path": "legal_review_hold"
+    }
+  ],
+  "resolution_paths": {
+    "document_request_hold": {
+      "actions": [
+        "Notify shipper of missing documents",
+        "Create documentation task for compliance",
+        "Re-run validation upon upload"
+      ],
+      "fallback": "Hold dispatch queue",
+      "owner": "Compliance"
+    },
+    "legal_review_hold": {
+      "actions": [
+        "Route case to legal",
+        "Capture restricted route evidence",
+        "Issue legal clearance or denial"
+      ],
+      "fallback": "Block dispatch and notify stakeholders",
+      "owner": "Legal"
+    }
+  }
+}

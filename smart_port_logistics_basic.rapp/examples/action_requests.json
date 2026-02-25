@@ -1,0 +1,92 @@
+{
+  "type": "action_request_examples",
+  "schema_version": "1.0",
+  "examples": [
+    {
+      "name": "Search available slots",
+      "action_id": "slot.search",
+      "request_id": "req-slot-search-001",
+      "context": {
+        "booking": {
+          "reference_id": "BK-90210",
+          "facility": {
+            "port_code": "USLAX",
+            "terminal": "Pier 400",
+            "gate_id": "G-12"
+          },
+          "requested_window": {
+            "start": "2025-08-20T08:00:00Z",
+            "end": "2025-08-20T16:00:00Z"
+          },
+          "container": {
+            "container_id": "CONT-7781",
+            "size": "40FT"
+          }
+        },
+        "constraints": {
+          "mode": "truck",
+          "equipment": "chassis",
+          "hazmat": false
+        },
+        "documents": {
+          "required": ["customs_release", "driver_pass"]
+        }
+      }
+    },
+    {
+      "name": "Hold a candidate slot",
+      "action_id": "slot.hold",
+      "request_id": "req-slot-hold-007",
+      "context": {
+        "booking": {
+          "reference_id": "BK-90210",
+          "slot_candidate_id": "SLOT-CAND-332",
+          "requested_window": {
+            "start": "2025-08-20T10:00:00Z",
+            "end": "2025-08-20T12:00:00Z"
+          }
+        },
+        "policy": {
+          "hold_ttl_minutes": 120
+        }
+      }
+    },
+    {
+      "name": "Confirm a booked slot",
+      "action_id": "slot.confirm",
+      "request_id": "req-slot-confirm-014",
+      "context": {
+        "booking": {
+          "reference_id": "BK-90210",
+          "slot_request_id": "SLOT-REQ-551",
+          "requested_window": {
+            "start": "2025-08-20T10:00:00Z",
+            "end": "2025-08-20T12:00:00Z"
+          }
+        },
+        "documents": {
+          "status": "clear"
+        }
+      }
+    },
+    {
+      "name": "Reschedule an existing slot",
+      "action_id": "slot.reschedule",
+      "request_id": "req-slot-resched-021",
+      "context": {
+        "booking": {
+          "reference_id": "BK-90210",
+          "slot_id": "SLOT-0911",
+          "new_requested_window": {
+            "start": "2025-08-21T13:00:00Z",
+            "end": "2025-08-21T17:00:00Z"
+          }
+        },
+        "policy": {
+          "eta_tolerance_minutes": 45,
+          "no_show_grace_minutes": 30
+        }
+      }
+    }
+  ]
+}

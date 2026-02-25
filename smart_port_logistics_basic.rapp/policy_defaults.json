@@ -1,0 +1,16 @@
+{
+  "type": "policy_defaults",
+  "schema_version": "1.0",
+  "policy_defaults": {
+    "approver_group": "operations",
+    "hold_ttl_minutes": 120,
+    "eta_tolerance_minutes": 45,
+    "no_show_grace_minutes": 30
+  },
+  "notes": [
+    "Approver group defines the default routing group for booking and rebooking approvals.",
+    "Hold TTL controls how long slot holds remain valid before expiring.",
+    "ETA tolerance defines the allowable deviation before alerts fire.",
+    "No-show grace defines the window before marking a missed appointment."
+  ]
+}

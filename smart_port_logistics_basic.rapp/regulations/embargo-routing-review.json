@@ -1,0 +1,5 @@
+{
+  "type": "regulation",
+  "name": "Embargo & Restricted Route Review",
+  "description": "Flags shipments that traverse embargoed regions or restricted corridors and requires legal review before dispatch."
+}

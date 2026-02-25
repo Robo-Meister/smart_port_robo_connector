@@ -1,0 +1,18 @@
+{
+  "type": "validation_rule",
+  "rule_id": "DOC.MISSING_REQUIRED",
+  "severity": "critical",
+  "status": "failed",
+  "message": "Required dispatch documents are missing.",
+  "missing_documents": [
+    "customs_declaration",
+    "clearance_certificate"
+  ],
+  "evidence": [
+    {
+      "type": "customs_declaration",
+      "reference": "evidence://docs/missing/customs-declaration"
+    }
+  ],
+  "timestamp": "2024-09-15T09:17:40Z"
+}

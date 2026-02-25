@@ -1,0 +1,8 @@
+{
+  "type": "document",
+  "code": "port_booking_request",
+  "name": "Port Booking Request",
+  "description": "Template for booking berth and gate slots.",
+  "template": true,
+  "content": "Port Booking Request\n\nReference: {{booking_reference}}\nVessel: {{vessel_name}}\nArrival ETA: {{arrival_eta}}\nContainer Count: {{container_count}}\n\n%%content%%"
+}

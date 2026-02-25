@@ -1,0 +1,29 @@
+{
+  "type": "domain_model",
+  "model": "Gate",
+  "description": "Physical or logical access point used for inbound/outbound processing.",
+  "requiredFields": [
+    "id",
+    "name",
+    "gateType",
+    "status",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique gate identifier (UUID)."},
+    "name": {"type": "string", "description": "Gate display name."},
+    "gateType": {"type": "string", "description": "yard_gate, dock_door, inspection_bay, quality_station."},
+    "status": {"type": "string", "description": "active, closed, maintenance."},
+    "terminalId": {"type": "string", "description": "Terminal or site reference identifier."},
+    "location": {"type": "object", "description": "Latitude/longitude or facility map coordinates."},
+    "lanes": {"type": "array", "items": "object", "description": "Optional lane definitions and metadata."},
+    "capabilities": {"type": "array", "items": "string", "description": "Available sensors or checks (anpr, rfid, scale, camera)."},
+    "operatingHours": {"type": "object", "description": "Working schedule for gate availability."},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "visits": {"model": "GateVisit", "field": "gateId"}
+  }
+}

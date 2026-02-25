@@ -1,0 +1,38 @@
+{
+  "type": "domain_model",
+  "model": "GateCheck",
+  "description": "Gate validation checkpoint performed during inbound or outbound processing.",
+  "requiredFields": [
+    "id",
+    "gateId",
+    "direction",
+    "status",
+    "createdAt",
+    "updatedAt"
+  ],
+  "fields": {
+    "id": {"type": "string", "description": "Unique gate check identifier (UUID)."},
+    "gateId": {"type": "string", "description": "Gate reference identifier."},
+    "laneId": {"type": "string", "description": "Lane or channel identifier within the gate."},
+    "direction": {"type": "string", "description": "inbound or outbound."},
+    "status": {"type": "string", "description": "initiated, in_progress, completed, failed, cancelled, verified, denied, manual_review."},
+    "appointmentId": {"type": "string", "description": "Slot appointment reference if scheduled."},
+    "gateVisitId": {"type": "string", "description": "Gate visit reference if linked to a visit."},
+    "verifiedIdentifiers": {"type": "object", "description": "Matched ANPR, RFID, and QR identifiers."},
+    "weightKg": {"type": "number", "description": "Captured gross weight in kilograms."},
+    "releaseReference": {"type": "string", "description": "Release or authorization reference."},
+    "failureReasonCode": {"type": "string", "description": "Failure reason code when the check is rejected."},
+    "failureDetails": {"type": "string", "description": "Additional failure detail or operator notes."},
+    "manualOverride": {"type": "boolean", "description": "Indicates if an override was used to proceed."},
+    "initiatedAt": {"type": "string", "format": "date-time"},
+    "completedAt": {"type": "string", "format": "date-time"},
+    "failedAt": {"type": "string", "format": "date-time"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "relationships": {
+    "gate": {"model": "Gate", "field": "gateId"},
+    "slotAppointment": {"model": "SlotAppointment", "field": "appointmentId"},
+    "gateVisit": {"model": "GateVisit", "field": "gateVisitId"}
+  }
+}
