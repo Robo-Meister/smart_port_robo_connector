@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0",
+  "type": "actor_capabilities",
+  "actors": [
+    {
+      "actor_type": "compliance",
+      "supports_actions": [
+        "documents.check",
+        "rebooking.guardrails.validate"
+      ],
+      "scopes": [
+        "customs",
+        "hazmat",
+        "security"
+      ],
+      "availability": "business_hours",
+      "quality": "high"
+    },
+    {
+      "actor_type": "customer_success",
+      "supports_actions": [
+        "approval.destination_change.capture",
+        "notifications.send"
+      ],
+      "scopes": [
+        "client",
+        "approvals"
+      ],
+      "availability": "business_hours",
+      "quality": "high"
+    },
+    {
+      "actor_type": "dispatch",
+      "supports_actions": [
+        "dispatch.driver.assign",
+        "notifications.send"
+      ],
+      "scopes": [
+        "carrier",
+        "driver"
+      ],
+      "availability": "24x7",
+      "quality": "standard"
+    },
+    {
+      "actor_type": "gate_ops",
+      "supports_actions": [
+        "gate.anpr.capture",
+        "gate.event.emit",
+        "gate.arrival.ingest",
+        "gate.departure.ingest",
+        "gate.barrier.open",
+        "gate.scale.read",
+        "gate.check_in.record",
+        "gate.check_out.record",
+        "gate.qr.scan",
+        "gate.rfid.scan"
+      ],
+      "scopes": [
+        "gate",
+        "yard"
+      ],
+      "availability": "24x7",
+      "quality": "standard"
+    },
+    {
+      "actor_type": "legal",
+      "supports_actions": [
+        "compliance.legal_review.route"
+      ],
+      "scopes": [
+        "embargo",
+        "restricted_route",
+        "export_control"
+      ],
+      "availability": "business_hours",
+      "quality": "high"
+    },
+    {
+      "actor_type": "operations",
+      "supports_actions": [
+        "slot.alternatives.search",
+        "rebooking.alternatives.search",
+        "rebooking.slots.suggest",
+        "rebooking.alternatives.rank",
+        "rebooking.plan.assemble",
+        "rebooking.alternatives.handle_insufficient",
+        "rebooking.preview.generate",
+        "approval.operations.route",
+        "eta.update"
+      ],
+      "scopes": [
+        "rebooking",
+        "disruption",
+        "planning"
+      ],
+      "availability": "24x7",
+      "quality": "high"
+    },
+    {
+      "actor_type": "port_ops",
+      "supports_actions": [
+        "shipment.inbound.detect",
+        "slot.search",
+        "slot.chain.suggest",
+        "slot.confirm",
+        "slot.chain.confirm",
+        "slot.chain.reserve"
+      ],
+      "scopes": [
+        "terminal",
+        "gate",
+        "yard"
+      ],
+      "availability": "24x7",
+      "quality": "standard"
+    },
+    {
+      "actor_type": "security",
+      "supports_actions": [
+        "gate.exit_authorization.validate",
+        "gate.credentials.validate"
+      ],
+      "scopes": [
+        "access_control",
+        "compliance"
+      ],
+      "availability": "24x7",
+      "quality": "high"
+    }
+  ]
+}

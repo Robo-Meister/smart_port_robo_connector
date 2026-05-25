@@ -9,7 +9,7 @@
   "screenshots": [
     "/screenshots/auto_reconfiguration.png",
     "/screenshots/carrier_selection.png",
-    "/screenshots/scm_deply.png",
+    "/screenshots/scm_dely.png",
     "/screenshots/supplier_performents.png",
     "/screenshots/wms_ocuppy.png",
     "/screenshots/group_capital_scm.png"
@@ -21,7 +21,7 @@
     "booking",
     "compliance"
   ],
-  "version": "1.0.0",
+  "version": "1.0.4",
   "entry": "app.json",
   "workflows": [
     "workflows/smart-slot-booking.json",

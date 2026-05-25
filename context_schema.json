@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.2",
+  "type": "context_schema",
+  "required_paths": [
+    "$.booking.reference_id",
+    "$.booking.requested_window.start",
+    "$.booking.requested_window.end",
+    "$.booking.slot_chain.stages[]",
+    "$.constraints.mode",
+    "$.documents.required[]",
+    "$.documents.required[].criticality",
+    "$.documents.required[].cargo_types",
+    "$.documents.required_by_cargo",
+    "$.documents.blocking_rules[]",
+    "$.resources[]",
+    "$.booking.facility",
+    "$.constraints",
+    "$.documents",
+    "$.policy.hold_ttl_minutes",
+    "$.policy.eta_tolerance_minutes",
+    "$.policy.no_show_grace_minutes"
+  ],
+  "sections": {
+    "booking": {
+      "description": "Core booking intent, identifiers, requested windows, slot chains, and shipment metadata.",
+      "example_fields": [
+        "reference_id",
+        "requested_window",
+        "slot_chain",
+        "container",
+        "facility"
+      ]
+    },
+    "slot_chain": {
+      "description": "Multi-stage slot chain across gate, yard, crane, and berth resources with dependency rules.",
+      "example_fields": [
+        "stages",
+        "dependencies",
+        "planned_sequence",
+        "status"
+      ]
+    },
+    "constraints": {
+      "description": "Operational constraints for matching a slot or carrier.",
+      "example_fields": [
+        "mode",
+        "equipment",
+        "temperature",
+        "hazmat"
+      ]
+    },
+    "documents": {
+      "description": "Document requirements, artifacts, compliance status, and checklist rules with criticality, per-cargo applicability, and blocking logic.",
+      "example_fields": [
+        "required",
+        "required_by_cargo",
+        "criticality",
+        "cargo_types",
+        "blocking_rules",
+        "provided",
+        "status"
+      ]
+    },
+    "resources": {
+      "description": "Resource definitions for gates, yards, cranes, and berths with capacity and parallelism metadata.",
+      "example_fields": [
+        "resource_id",
+        "resource_type",
+        "capacity",
+        "parallelism",
+        "calendar"
+      ]
+    },
+    "resource_calendars": {
+      "description": "Calendar windows, blackout periods, and exception handling for resource availability.",
+      "example_fields": [
+        "availability_windows",
+        "exceptions",
+        "time_zone"
+      ]
+    },
+    "external": {
+      "description": "Provider-specific references and raw payloads.",
+      "example_fields": [
+        "refs",
+        "raw"
+      ]
+    },
+    "audit": {
+      "description": "Audit trail for normalization and actions.",
+      "example_fields": [
+        "normalized_at",
+        "normalized_by"
+      ]
+    },
+    "policy": {
+      "description": "Policy defaults and SLA parameters applied to the booking.",
+      "example_fields": [
+        "approver_group",
+        "hold_ttl_minutes",
+        "eta_tolerance_minutes",
+        "no_show_grace_minutes"
+      ]
+    }
+  }
+}

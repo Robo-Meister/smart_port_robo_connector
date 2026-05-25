@@ -37,10 +37,31 @@
     }
   },
   "menu": [
-    {"title": "Shipments", "icon": "📦", "route": "scm.shipments"},
-    {"title": "Smart Booking", "icon": "📅", "route": "scm.port_booking"},
-    {"title": "Risk Alerts", "icon": "⚠️", "route": "scm.risk_alerts"},
-    {"title": "Warehouse ETAs", "icon": "🏭", "route": "scm.warehouse_tracking"},
-    {"title": "Supply Chain Map", "icon": "🗺️", "route": "scm.supply_map"}
-  ]
+    {
+      "title": "Shipments",
+      "icon": "📦",
+      "route": "scm.shipments"
+    },
+    {
+      "title": "Smart Booking",
+      "icon": "📅",
+      "route": "scm.port_booking"
+    },
+    {
+      "title": "Risk Alerts",
+      "icon": "⚠️",
+      "route": "scm.risk_alerts"
+    },
+    {
+      "title": "Warehouse ETAs",
+      "icon": "🏭",
+      "route": "scm.warehouse_tracking"
+    },
+    {
+      "title": "Supply Chain Map",
+      "icon": "🗺️",
+      "route": "scm.supply_map"
+    }
+  ],
+  "defaultRoute": "scm.shipments"
 }
